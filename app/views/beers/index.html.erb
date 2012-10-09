@@ -25,3 +25,40 @@
 <br />
 
 <%= link_to 'New Beer', new_beer_path %>
+
+<%= link_to 'JSON Beer', "beers.json" %>
+
+<a href="#" id="ajaxLink">AJAX</a>
+
+<div id="ajaxList"></div>
+
+<%= javascript_include_tag params[:controller] %>
+
+<script type="text/javascript">
+
+// function alertMe() {
+    // alert('Hello beer!');
+// }
+// 
+// $('#ajaxLink').click( getAjax );
+// 
+// function getAjax() {
+//    
+    // $.ajax({
+        // url: "http://localhost:3000/beers.json",
+        // dataType: "json",
+        // type: "GET",
+        // processData: true,
+        // contentType: "application/json",
+        // success : populate
+    // });
+// }
+// 
+// function populate( data ) {
+    // //alert( 'data:' + data);
+    // $( data ).each( function( item ) {
+        // alert('item=' + item );
+        // $('#ajaxList').append('<div>' + item['name'] + '</div>');
+    // })
+// }
+</script>
