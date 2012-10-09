@@ -24,7 +24,7 @@ $().ready( function() {
 function getAjax() {
    
     $.ajax({
-        url: "http://localhost:3000/beers.json",
+        url: "/beers.json",
         dataType: "json",
         type: "GET",
         processData: true,
