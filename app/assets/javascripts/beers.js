@@ -38,8 +38,14 @@ function populate( data ) {
     $( data ).each( function( index ) {
         console.log('index=' + index );
        
-        $('#list').append( '<div class="item">' + this.name + '</div>');
+        $('#list').append( '<div class="item" data-id="' + this.id + '">' + this.name + '</div>');
         
-        
-    })
+    });
+    
+    $('.item').click( clickItem );
+}
+
+function clickItem( e ) {
+	var item = $(e.currentTarget);
+	alert('item=' + item);
 }
