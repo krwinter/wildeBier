@@ -16,7 +16,7 @@ var itemTemplate = '<div class="beerName">name</div>';
 function alertMe() {
     alert('Hello beer!');
 }
-
+/*
 $().ready( function() {
 	getAjax();
 });
@@ -48,4 +48,4 @@ function populate( data ) {
 function clickItem( e ) {
 	var item = $(e.currentTarget);
 	alert('item=' + item);
-}
+*/

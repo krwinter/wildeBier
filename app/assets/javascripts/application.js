@@ -10,6 +10,13 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require jquery
-//= require jquery_ujs
-//= require_tree .
+// DO NOT = require jquery
+// DO NOT = require jquery_ujs
+// DO NOT = require_tree .
+
+require( ['jquery', 'backbone', 'underscore', 'app' ], 
+		function($, Backbone, _, App ) {
+
+   App.init();
+    
+} );
