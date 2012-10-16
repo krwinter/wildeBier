@@ -14,6 +14,26 @@
 // DO NOT = require jquery_ujs
 // DO NOT = require_tree .
 
+require.config({
+	
+	paths : {
+		
+		jquery : 'jquery',
+		underscore : 'underscore',
+		backbone : 'backbone',
+		
+		text : 'require-text',
+		
+		collections : 'backbone/collections',
+		models : 'backbone/models',
+		views : 'backbone/views',
+		templates : 'backbone/templates',
+		
+	}
+	
+});
+
+
 require( ['jquery', 'backbone', 'underscore', 'app' ], 
 		function($, Backbone, _, App ) {
 
