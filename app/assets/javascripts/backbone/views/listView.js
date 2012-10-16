@@ -1,5 +1,7 @@
-define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', 'collections/beers' ],
- 	function( $, Backbone, _, ListItem, Beer, Beers ) {
+define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', 'collections/beers',
+			'text!templates/modal.html', 'bootstrap' ],
+ 	function( $, Backbone, _, ListItem, Beer, Beers,
+ 			Modal, bootstrap ) {
 	
 	var beers,
 
@@ -7,7 +9,6 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 		
 		
 		initialize : function() {
-			//alert('listview');
 			
 			beers = new Beers();
 			beers.on( "add", function( beer ) {
@@ -17,20 +18,18 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 			
 			this.loadBeerFeed();
 			
-			//this.render();
 		},
 		
 		render : function( data ) {
 			
-	    	//var compiled = _.template('<div class="item" data-id="id">name is <%= name %></div>', {name : 'joe'});
-	       // $(this.el).html( compiled );
-				
+			$('body').append( Modal );
+			$('.modal').hide();
+			
 			$( data ).each( function( index ) {
 		        
 		        var beer = new Beer( { id : this.id, name : this.name })
 		        beers.add( beer );
 		        
-		       // var item = new ListItem( { model : beer } );
 		        var item = new ListItem( beer );
 		        
 		    } );
@@ -56,10 +55,16 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 		
 		
 		clickItem : function( e ) {
-			console.log('click');
-			console.log('e=',e);
 			var item = $(e.currentTarget);
 			console.log(item);
+			var beerId = item.attr('data-id');
+			console.log('click id=' + beerId);
+			var beer = beers.where( { id : Number( beerId ) });
+			
+			var modalTemplate = _.template( Modal, beer[0].toJSON() )
+			
+			$('.modal').html( modalTemplate );
+			$('.modal').modal();
 		}
 		
 	});

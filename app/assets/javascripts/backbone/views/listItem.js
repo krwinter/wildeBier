@@ -1,5 +1,5 @@
 define( [ 'jquery', 'backbone', 'underscore', 'text!templates/listItem.html' ],
- 	function( $, Backbone, _, template ) {
+ 	function( $, Backbone, _, template) {
 	
 	var item = Backbone.View.extend({
 		

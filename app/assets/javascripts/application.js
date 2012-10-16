@@ -29,6 +29,13 @@ require.config({
 		views : 'backbone/views',
 		templates : 'backbone/templates',
 		
+	},
+	
+	shim : {
+		'bootstrap' : {
+			deps : [ 'jquery' ],
+			exports : 'Bootstrap'
+		}
 	}
 	
 });
