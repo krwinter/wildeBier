@@ -13,6 +13,11 @@
 // DO NOT = require jquery
 // DO NOT = require jquery_ujs
 // DO NOT = require_tree .
+// 
+// We need to leave these in for now - they make the DELETE method work
+//
+//= require jquery
+//= require jquery_ujs
 
 require.config({
 	

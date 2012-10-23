@@ -1,4 +1,16 @@
+<%= javascript_include_tag "application" %>
+<% if signed_in? %>
+  - Signed in as <%= current_user.first_name + " " + current_user.last_name %>-
+  <%= link_to "Profile", user_path(current_user) %>
+  -
+  <%= link_to "Sign out", signout_path, method: :delete %>
+<% else %>
+  - Not signed in -<%= link_to "Sign in", signin_path %>
+<% end %>
 <div id="main">
     <div class="title">WildeBier!</div>
     <div id="list"></div>
 </div>
+<!--
+<%= debug(User.find_by_remember_token(cookies[:remember_token])) if Rails.env.development? %>
+-->
