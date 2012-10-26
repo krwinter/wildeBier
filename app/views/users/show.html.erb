@@ -1,17 +1,18 @@
 <% provide(:title, @user.first_name) %>
+ <div class="row-fluid">
+        <div class="title span8">
+            <h1>
+                 <%= @user.first_name %> <%= @user.last_name %>
+            </h1>
+
+        </div>
+    </div>
 <div class="row">
-  <aside class="span4">
-    <section>
-      <h1>
-        <%= @user.first_name %> <%= @user.last_name %>
-      </h1>
-    </section>
-    <section>
-      <%= link_to 'Edit ' + @user.first_name, edit_user_path %>
-    </section>
-  </aside>
-  <div class="span8">
-    User stuff
-      <%= link_to "Sign out", signout_path, method: :delete %>
-  </div>
+    <div class="span4 offset2"><%=@user.first_name %></div>
+</div>
+<div class="row">
+    <div class="span4 offset2"><%=@user.last_name %></div>
+</div>
+<div class="row">
+    <div class="span4 offset2"><%=@user.email %></div>
 </div>

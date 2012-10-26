@@ -28,6 +28,13 @@ module SessionsHelper
     @current_user=user
   end
   
+  def admin_user
+    logger.debug ' ########### admin_user? ' + current_user.admin?.to_s
+    unless current_user.admin?
+      redirect_to root_url
+    end
+  end
+  
   def redirect_back_or(default)
     redirect_to(session[:return_to] || default)
     session.delete(:return_to)

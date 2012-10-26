@@ -1,14 +1,23 @@
-<%= javascript_include_tag "application" %>
-<% if signed_in? %>
-  - Signed in as <%= current_user.first_name + " " + current_user.last_name %>-
-  <%= link_to "Profile", user_path(current_user) %>
-  -
-  <%= link_to "Sign out", signout_path, method: :delete %>
-<% else %>
-  - Not signed in -<%= link_to "Sign in", signin_path %>
-<% end %>
-<div id="main">
-    <div class="title">WildeBier!</div>
+<!--<%= javascript_include_tag "application" %>-->
+<div id="main" >
+    <div class="row-fluid">
+        <div class="title span8">
+            WildeBier!
+        </div>
+        <div class="user-info span4">
+                <% if signed_in? %>
+                  <%= link_to current_user.first_name + " " + current_user.last_name, user_path(current_user) %>
+                  <br />
+                  <%= link_to "Sign out", signout_path, method: :delete %>
+                <% else %>
+                  - Not signed in -<%= link_to "Sign in", signin_path %>
+                <% end %>
+                <% if current_user.admin? %>
+                    <br />
+                    <%= link_to "ADMIN", admin_path %>
+                <% end %>
+        </div>
+    </div>
     <div id="list"></div>
 </div>
 <!--

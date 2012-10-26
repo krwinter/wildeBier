@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       sign_in @user
-      flash[:success] = "Welcome to the Sample App!"
+      flash[:success] = "Welcome to WILDEBIER"
       redirect_to @user
     else
       render 'new'
@@ -35,7 +35,12 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"
-      sign_in @user
+      
+      logger.debug ' ############### current_user?=' + current_user?(@user).to_s
+      if current_user?(@user)
+        sign_in @user
+      end
+      
       redirect_to @user
     else
       render 'edit'
@@ -47,7 +52,16 @@ class UsersController < ApplicationController
   
       def correct_user
         @user = User.find(params[:id])
-        redirect_to(root_path) unless current_user?(@user)
+        logger.debug "#############################  in correct_user";
+        logger.debug 'current_user?=' + current_user?(@user).to_s
+        logger.debug 'current_user.admin?=' + current_user.admin?.to_s
+        
+        if !current_user?(@user) && !current_user.admin?
+          redirect_to(root_path)
+        end
+        
+        #redirect_to(root_path) unless current_user?(@user) || @user.admin?
       end
   
+
 end
