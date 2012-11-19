@@ -8,7 +8,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<% if params[:controller] != 'static_pages' || params[:action] != 'home' %>
+<% if !(params[:controller] == 'static_pages' && params[:action] == 'home') %>
     <%= render 'layouts/header' %>
 <% end %> 
 <div class="container">

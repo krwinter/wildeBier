@@ -5,16 +5,20 @@
 body { 
   margin:0; 
   padding:0; 
-  height:100%; 
+  height:100%;
+  background-color: #ffeedd; 
 }
 
-#main {
+#main-list {
   width : 80%;
   align : center;
-  background-color : #cccccc;
+  background-color : #000022;
   margin-left : auto;
   margin-right : auto;
-  height : 100px;
+  /*height : 100px;*/
+  border : 2px solid;
+  border-color: #666666;
+  border-radius : 0px;
 }
 
 #list {
@@ -29,19 +33,41 @@ body {
   border : 1px solid #000055;
   background-color : #dddddd;
   height : 100px;
+  border-radius : 0px;
   
+  .beer-text {
+    color : #000;
+    position : relative;
+    padding-left : 120px;
+    
+    
+  }
+  
+  .beer-description {
+    font-size : 80%;
+    font-style : italic;
+    paddint-top: 5px;
+  }
+
 }
+
+.beer-label {
+  border : 1px solid;
+  border-color : #000;
+  float: left;
+}
+
 
 .title {
   font-size : 225%;
-  color : #0055ee;
+  color : #dedede;
   padding : 20px;
 }
 
 .user-info {
   width : 100%;
   font-size : 100%;
-  color : #000;
+  color : #fff;
   padding : 2px;
   text-align : right;
 }

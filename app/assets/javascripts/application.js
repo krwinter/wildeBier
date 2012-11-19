@@ -33,6 +33,7 @@ require.config({
 		models : 'backbone/models',
 		views : 'backbone/views',
 		templates : 'backbone/templates',
+		controllers : 'backbone/controllers',
 		
 	},
 	

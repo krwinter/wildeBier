@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :first_name, :last_name, :admin, :password, :password_confirmation
+  attr_accessible :fb_user_id, :fb_status, :fb_access_token, :fb_signed_request, :fb_expires
   has_secure_password
   
   
@@ -12,8 +13,11 @@ class User < ActiveRecord::Base
   validates :email, presence:   true,
                     format:     { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
-  validates :password,  length: { minimum: 6 }
-  validates :password_confirmation, presence: true
+
+# removed so we can update via without pw fields
+# TODO - keep pw validation for secure stuff, move nonsecure to profile table
+#  validates :password,  length: { minimum: 6 }
+#  validates :password_confirmation, presence: true
   
  
   

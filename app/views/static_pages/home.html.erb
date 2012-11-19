@@ -1,5 +1,5 @@
 <!--<%= javascript_include_tag "application" %>-->
-<div id="main" >
+<div id="main-list" >
     <div class="row-fluid">
         <div class="title span8">
             WildeBier!
@@ -16,8 +16,15 @@
                     <br />
                     <%= link_to "ADMIN", admin_path %>
                 <% end %>
+                <div id="fb-info">FB INFO</div>
         </div>
     </div>
+
+    <!-- pass rails user data into javascript -->
+    <script id="rails_user_data" type="text/json" >
+        <%= current_user.to_json %>
+    </script>
+    
     <div id="list"></div>
 </div>
 <!--

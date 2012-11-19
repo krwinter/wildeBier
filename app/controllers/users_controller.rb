@@ -41,7 +41,18 @@ class UsersController < ApplicationController
         sign_in @user
       end
       
-      redirect_to @user
+      # TODO - make so we redirect from edit page, we do not from in-page ajax request - e.g. to get fb details
+      
+      if request.xhr?
+        logger.debug '++ is request.xhr'
+        render :json => {
+          #:location => url_for(:controller => 'jobs', :action => 'index'),
+          :flash => {:notice => "Hello"}
+        }
+      else
+        redirect_to @user
+      end
+      
     else
       render 'edit'
     end

@@ -16,3 +16,8 @@
 <div class="row">
     <div class="span4 offset2"><%=@user.email %></div>
 </div>
+<% if current_user || @user.admin %>
+<div class="row">
+    <div class="span4 offset2"><ADMIN GUY><%= link_to( 'EDIT', edit_user_path )%> </div>
+</div>
+<% end %>

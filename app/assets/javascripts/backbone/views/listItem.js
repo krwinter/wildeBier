@@ -21,7 +21,17 @@ define( [ 'jquery', 'backbone', 'underscore', 'text!templates/listItem.html' ],
 			var rendered = _.template( template, this.model.toJSON() );
 			
 			$(this.el).append( rendered );
+			
+			this.setupListeners();
 		
+		},
+		
+		setupListeners : function() {
+			
+			$('.like', $(this.el) ).click( function() {
+				console.log('LIKE');
+			})
+			
 		}
 		
 	});

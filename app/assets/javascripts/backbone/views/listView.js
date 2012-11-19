@@ -23,11 +23,14 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 		render : function( data ) {
 			
 			$('body').append( Modal );
-			$('.modal').hide();
+			$('#myModal').hide();
+			//$('#myModal').modal('hide');
 			
 			$( data ).each( function( index ) {
 		        
-		        var beer = new Beer( { id : this.id, name : this.name })
+		        var beer = new Beer( {	 id 			: this.id,
+		        						 name 			: this.name,
+		        						 description 	: this.description });
 		        beers.add( beer );
 		        
 		        var item = new ListItem( beer );
@@ -62,9 +65,10 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 			var beer = beers.where( { id : Number( beerId ) });
 			
 			var modalTemplate = _.template( Modal, beer[0].toJSON() )
+			//var modalTemplate = _.template( $('#myModal'), beer[0].toJSON() )
 			
-			$('.modal').html( modalTemplate );
-			$('.modal').modal();
+			$('#myModal').append( modalTemplate );
+			$('#myModal').modal();
 		}
 		
 	});
