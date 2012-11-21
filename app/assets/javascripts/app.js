@@ -10,9 +10,11 @@ function( ListView, Beer, eventBus, User, fbController ) {
 			
 			var userJSON = $( "#rails_user_data" ).html();
 			
-        	var	userObj     = $.parseJSON( userJSON.replace(/\&quot\;/g, '"' ) );
+			if ( userJSON ) {
+        		var	userObj     = $.parseJSON( userJSON.replace(/\&quot\;/g, '"' ) );
 			
-			this.user = User.set( userObj );
+				this.user = User.set( userObj );
+			}
 			
 			
 			//this.user = new User( userObj );

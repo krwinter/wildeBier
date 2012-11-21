@@ -1,7 +1,12 @@
 define( [ 'jquery', 'backbone', 'underscore' ],
  	function( $, Backbone, _ ) {
 	
-
+	var e = {
+		
+		fbOnLoginStatus : 'fbOnLoginStatus',
+		fbOnLogin : 'fbOnLogin',
+		fbOnMeApi : 'fbOnMeApi'
+	};
 	
 
 //	var eventBus = Backbone.Model.extend({
@@ -30,7 +35,10 @@ define( [ 'jquery', 'backbone', 'underscore' ],
 	    	
 	    	this.busObj.off( event, callback, context );
 	    
-	    }
+	    },
+	    
+	    // events as properties
+	    e : events
 		
 	
 	};

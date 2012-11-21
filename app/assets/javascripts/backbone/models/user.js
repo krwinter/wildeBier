@@ -17,14 +17,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus' ],
 	var user = Backbone.Model.extend({
 	
 		defaults: {
-	    	first_name: 'Great Beer',
-	        last_name: 'Not Specified',
-	        email: 'Truly a great beer.',
-	        id : 'X',
-	        fb_user_id : 'Y',
-	        fb_access_token : 'Z',
-	        fb_signed_request : '0',
-	        fb_expires : '1'
+		  
 	    },
 	       
 	    initialize : function() {
