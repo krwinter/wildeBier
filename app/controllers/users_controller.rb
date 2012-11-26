@@ -2,14 +2,33 @@ class UsersController < ApplicationController
   
     
   before_filter :signed_in_user,  only: [:home]
-  before_filter :correct_user,   only: [:edit, :update, :show]
+  #TODO find way to update user without them being logged in - so we can update fb status, then log them in
+  # =>    but restrict profile updates to only logged in users
+  before_filter :correct_user,   only: [:edit, :show]
  
   def index
-    @users = User.paginate(page: params[:page])
+    
+    if params[:fbid]
+      fbid = params[:fbid]
+      # TODO if we find more than one, do something about dupes
+      @users = User.find(:first, :conditions => ['fb_user_id = ?', fbid] )
+      render json: @users
+    else
+      @users = User.paginate(page: params[:page])
+    end
   end
   
   def show
-    @user = User.find(params[:id])
+    if params[:id]
+      @user = User.find(params[:id])
+    end
+      
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @user }
+    end
+    
   end
   
   def edit
@@ -33,6 +52,11 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
+    
+   if !signed_in?
+      sign_in @user
+   end
+    
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"
       

@@ -2,14 +2,22 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus' ],
  	function( $, Backbone, _, eventBus ) {
 	
 
-	    
-	var onFbLogin = function( response ) {
-	    	
-	    	console.log('fb login success!', response, this );
-	       //	this.fbAccessToken = response.user.fbAccessToken;
-	    	
-	  };
-	  
+	function getQueryUrl( queryObj ) {
+		
+		if ( queryObj ) {
+	    		
+    		var queryString = '?';
+    		for ( var key in queryObj ) {
+    			queryString += key + '=' + queryObj[key] + '&';
+    		}
+    		
+    		// remove last '&'
+    		queryString = queryString.substr(0, queryString.length - 1 );
+    		
+    		return '/users' + queryString;
+	   }
+	}
+
 	var instance = null;
 
 
@@ -26,10 +34,20 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus' ],
 	       	
 	    },
 	    
-	    url : function() {
+	    sync : function( method, model, options ) {
 	    	
-	    	return '/users/' + this.get( 'id' );
+	    	if ( method === 'read' && options[ 'queryParams' ] ) {
+	    		
+	    		options['url'] = getQueryUrl( options[ 'queryParams' ] );
+	    	}
+	    	
+	    	Backbone.sync( method, model, options )
+	    },
 	    
+	    url : function() {
+
+   	    	return '/users/' + this.get( 'id' );
+    	
 	    }
 		
 	
@@ -41,4 +59,4 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus' ],
 	
 	//return user;
 
-});
+}); 

@@ -14,8 +14,6 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
  * session = :) - then FB getStatus
  * 
  * 
- * 
- * 
  * FB
  * 
  * FB login - no session, no FB ID 	-> INSERT + session
@@ -30,6 +28,8 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 	function addEventListeners() {
 		
 		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, fbController );
+		eventBus.listen( eventBus.e.fbOnMeApi, onMeApi, fbController );
+		eventBus.listen( eventBus.e.fbOnLogin, onLogin, fbController );
 	
 	}
 	
@@ -38,74 +38,74 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		fbStatusResponse = response;
 		
 		if (response.status === 'connected') {
-		    // connected
-		    console.log('connected');
-		    console.log(response);
+		    console.log('connected', response);
 		    
 			fbController.getUser();
 		    
 	   		// eventBus.dispatch( 'fbLoginSuccess', response )
-		    
-		} else if (response.status === 'not_authorized') {
-		    // not_authorized
-		    console.log('not auth');
-			//updateUser( response );
 		} else {
-		    // not_logged_in
-		    console.log('not logged in');
-			//updateUser( response );
+						// UPDATE FACEBOOK INFO VIEW
+			var fbLoginElement = $('.fb-login');
+			fbLoginElement.html('Login With Facebook');
+			
+			// click to login
+			fbLoginElement.click( fbController.login );
+			
+			if (response.status === 'not_authorized') {
+			    console.log('not auth');
+				updateUser( response );
+				
+			} else {
+			    console.log('not logged in');
+				updateUser( response );
+			}
 		}
 		
+	}
+	
+	function onMeApi( response ) {
+		console.log( 'onMeApi');
+		
+		// just add firstname and last name to main auth responseObj now
+		fbStatusResponse.first_name = response.first_name;
+		fbStatusResponse.last_name = response.last_name;
+		fbStatusResponse.fb_username = response.username;
+		$('.fb-login').html('FB YES! ' + response.first_name);
+		$('.fb-login').append('<img id="profilePic" src="https://graph.facebook.com/' + response.username +'/picture" />')
+		
+		// we are logged in via facebook, either already from earlier, or just now
+		updateUser( fbStatusResponse )
 		
 	}
-
-
-	function fetchFbUser( fbStatusResponse ) {
-	    console.log('Welcome!  Fetching your information.... ');
-	    FB.api('/me', function( fbUserResponse ){ 
-	    	onFetchFbUser( fbStatusResponse, fbUserResponse ); 
-	    } );
-	}
-
+	
 	    
-	var onLogin = function(response) {
+	function onLogin(response) {
 				
         if (response.authResponse) {
             // connected
+			$('.fb-login').html('FB YES-LOGIN!');
             
             console.log(' login success')
             // dispatch logged in event
             //eventBus.dispatch( 'fbLoginSuccess', response )
             
             // get first_name, last_name
-            
-           fetchFbUser( response );
+            fbController.getUser();
+
        
         } else {
         	// means
             // response.authRespone = null
-            // response.status="not_authorized"
+            // OR error OR cancel
             console.log(' login fail or cancel')
 	    }
 		    
-	},
+	}
    
-   
-	
-	onFetchFbUser = function( fbStatusResponse, fbUserResponse ) {
-		console.log( 'wow');
+	function updateUserModelWithFbResponse() {
 		
-		// just add firstname and last name to main auth responseObj now
-		fbStatusResponse.first_name = fbUserResponse.first_name;
-		fbStatusResponse.last_name = fbUserResponse.last_name;
-		
-		updateUser( fbStatusResponse )
-	},
-	
-	
-	updateUser = function( response ) {
-		
-		// 'connected', 'not_authorized', 'not_logged_in'
+		response = fbStatusResponse;
+			// 'connected', 'not_authorized', 'not_logged_in'
 		user.set( { fb_status : response.status });
 		
 		if ( response.first_name && response.last_name ) {
@@ -117,7 +117,6 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		if ( response.status == 'connected' ) {
 			var r = response.authResponse;
 		
-			$('.fb-login').html('FB YES!');
 			
 			user.set( { "fb_user_id" : r.userID,
 						"fb_access_token" : r.accessToken,
@@ -131,17 +130,69 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 						"fb_expires" : null
 			} );
 		
+
+		}
+	}
+	
+	var updateUser = function( response ) {
 		
-			// UPDATE FACEBOOK INFO VIEW
-			var fbLoginElement = $('.fb-login');
-			fbLoginElement.html('Login With Facebook');
+		// how to sync users?
+		// update local user with fb response date
+		// then check to see if it's a logged in local user
+		//		if logged in local user, just add latest fb stuff
+		//		if not logged in local user, fetch db record by fbid 
+		//			if fb record, update local user with non-fb user db data, sync to db, login
+		//			if no fb record, just an insert
+		
+		if ( user && user.id ) {
+		
+			updateUserModelWithFbResponse();
+			updateUserDb();
+		
+		} else {
 			
-			// click to login
-			fbLoginElement.click( fbController.login );
+			// if we have a fb user but don't know app user,
+			// query for fbid
+			// if fbid, update and create app session
+			user.fetch( { 	queryParams : 	{ 
+											fbid : fbStatusResponse.authResponse.userID
+										 	}, 
+							success : onQueryForAppUser	
+						} );
+			// else insert and create app session
 			
 		}
 		
-		updateUserDb();
+	
+		
+		
+		
+	},
+	
+	// should be called right after a user.fetch
+	onQueryForAppUser = function( model, response, options ) {
+		
+		if ( response.id ) {
+			updateUserModelWithFbResponse();
+			updateUserDb();
+		} else {
+			createNewUser();
+		}
+	},
+	
+	createNewUser = function() {
+		
+		Backbone.sync( 'create', user, {
+				
+				success : startAppSession
+				
+			} );
+	},
+	
+	startAppSession = function() {
+		
+		// call rails create session page
+		console.log(' now login for rails!');
 		
 	},
 	
@@ -157,15 +208,14 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 			} );
 		}
 		
-	//user.save( { success : function() { alert('db update success')} } );
-		
 	},
 	
 	dbUpdateSuccess = function( model, response ) {
 		
 		console.log('db update success' );
-		if ( document.location !== 'home' ) {
-			document.location = "http://localhost:3000";
+		// make sure rules followed - app logged in users on home view, else sign in
+		if ( document.location.pathname !== '/' ) {
+			//document.location = "http://ken.local:3000";
 		}
 		
 		
@@ -197,7 +247,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		      xfbml      : true  // parse XFBML
 		    });
 		   
-		   console.log('successssssss');
+		   console.log('FB SDK LOADED');
 		   
 		   fbController.getLoginStatus();
 		    
@@ -218,7 +268,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		
 		login : function() {
 			
-			FB.login( onLogin );
+			loginService.login();
 			
 		},
 		
@@ -226,7 +276,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		
 			// try not doing callback, use dispatch event from service
 			//loginService.getLoginStatus( onLoginStatus );
-			loginService.getLoginStatus( );
+			statusService.getLoginStatus();
 		},
 		
 		getUser : function() {

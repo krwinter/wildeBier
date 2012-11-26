@@ -1,7 +1,7 @@
 define( [ 'jquery', 'backbone', 'underscore' ],
  	function( $, Backbone, _ ) {
 	
-	var e = {
+	var events = {
 		
 		fbOnLoginStatus : 'fbOnLoginStatus',
 		fbOnLogin : 'fbOnLogin',

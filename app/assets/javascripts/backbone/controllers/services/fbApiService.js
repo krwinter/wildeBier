@@ -4,6 +4,8 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user' ]
 
 	function onMe( response ) {
 		
+		eventBus.dispatch( eventBus.e.fbOnMeApi, response )
+
 	}
 
 	var service = {
