@@ -16,6 +16,7 @@ class UsersController < ApplicationController
     else
       @users = User.paginate(page: params[:page])
     end
+    
   end
   
   def show
@@ -53,9 +54,12 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     
-   if !signed_in?
+    # TODO - fix so we only sign in:
+    #         a) existing user in db whose fb credentials we just got, or
+    #         b) current user who is updating their profile
+    if !signed_in?
       sign_in @user
-   end
+    end
     
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"

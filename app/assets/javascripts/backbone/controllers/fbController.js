@@ -53,11 +53,11 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 			
 			if (response.status === 'not_authorized') {
 			    console.log('not auth');
-				updateUser( response );
+				updateUser();
 				
 			} else {
 			    console.log('not logged in');
-				updateUser( response );
+				updateUser( );
 			}
 		}
 		
@@ -74,12 +74,14 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		$('.fb-login').append('<img id="profilePic" src="https://graph.facebook.com/' + response.username +'/picture" />')
 		
 		// we are logged in via facebook, either already from earlier, or just now
-		updateUser( fbStatusResponse )
+		updateUser()
 		
 	}
 	
 	    
 	function onLogin(response) {
+		
+		fbStatusResponse = response;
 				
         if (response.authResponse) {
             // connected
@@ -134,7 +136,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 		}
 	}
 	
-	var updateUser = function( response ) {
+	var updateUser = function() {
 		
 		// how to sync users?
 		// update local user with fb response date
@@ -154,18 +156,16 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 			// if we have a fb user but don't know app user,
 			// query for fbid
 			// if fbid, update and create app session
-			user.fetch( { 	queryParams : 	{ 
-											fbid : fbStatusResponse.authResponse.userID
-										 	}, 
-							success : onQueryForAppUser	
-						} );
-			// else insert and create app session
 			
+			if ( fbStatusResponse.authResponse && fbStatusResponse.authResponse.userID ) {
+				user.fetch( { 	queryParams : 	{ 
+												fbid : fbStatusResponse.authResponse.userID
+											 	}, 
+								success : onQueryForAppUser	
+							} );
+			}
+				
 		}
-		
-	
-		
-		
 		
 	},
 	
@@ -189,10 +189,12 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user',
 			} );
 	},
 	
-	startAppSession = function() {
+	startAppSession = function(model, response) {
 		
 		// call rails create session page
 		console.log(' now login for rails!');
+		
+		//get id, set backbone user, and rails user to newly logged in
 		
 	},
 	
