@@ -5,10 +5,15 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 	
 	var beers,
 
+
 		listView = Backbone.View.extend({
 		
+		tagName : 'div',
+		//id : 'bbAssigned',
 		
 		initialize : function() {
+			
+			_.bindAll(this, "render");
 			
 			beers = new Beers();
 			beers.on( "add", function( beer ) {
@@ -24,8 +29,8 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 			
 			$('body').append( Modal );
 			$('#myModal').hide();
-			//$('#myModal').modal('hide');
 			
+			var mainEl = this.el;
 			$( data ).each( function( index ) {
 		        
 		        var beer = new Beer( {	 id 			: this.id,
@@ -33,7 +38,9 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 		        						 description 	: this.description });
 		        beers.add( beer );
 		        
-		        var item = new ListItem( beer );
+		        var item = new ListItem( { model: beer } );
+		       // item.render();
+		        $(mainEl).append(item.el);
 		        
 		    } );
 		    
@@ -53,23 +60,23 @@ define( [ 'jquery', 'backbone', 'underscore', 'views/listItem', 'models/beer', '
 		},
 		
 		events : {
-			'click .item' : 'clickItem'
+			//'click .item' : 'clickItem'
 		},
 		
 		
 		clickItem : function( e ) {
-			var item = $(e.currentTarget);
-			console.log(item);
-			var beerId = item.attr('data-id');
-			console.log('click id=' + beerId);
-			var beer = beers.where( { id : Number( beerId ) });
-			
-			var modalTemplate = _.template( Modal, beer[0].toJSON() )
-			//var modalTemplate = _.template( $('#myModal'), beer[0].toJSON() )
-			
-			$('#myModal').append( modalTemplate );
-			$('#myModal').modal();
-		}
+			// var item = $(e.currentTarget);
+			// console.log(item);
+			// var beerId = item.attr('data-id');
+			// console.log('click id=' + beerId);
+			// var beer = beers.where( { id : Number( beerId ) });
+// 			
+			// var modalTemplate = _.template( Modal, beer[0].toJSON() )
+			// //var modalTemplate = _.template( $('#myModal'), beer[0].toJSON() )
+// 			
+			// $('#myModal').append( modalTemplate );
+			// $('#myModal').modal();
+		 }
 		
 	});
 	

@@ -19,7 +19,9 @@ function( ListView, Beer, eventBus, User, fbController ) {
 			
 			fbController.init();
 			
-			var list = new ListView( { el : $('#list')} )
+			var list = new ListView( { el : $('#list')} );
+			//var list = new ListView();
+			$("#listHolder").html(list.el);
         	//var beer = new Beer( { name: 'Belgian Leggy Blond' } );
 			
 		},
