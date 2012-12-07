@@ -62,6 +62,7 @@ define( [ 'jquery', 'backbone', 'underscore', 'text!templates/listItem.html', 't
 			//var modalTemplate = _.template( $('#myModal'), beer[0].toJSON() )
 			
 			$('#myModal').append( modalTemplate );
+			//$('#myModal').html( modalTemplate );
 			$('#myModal').modal();
 		},
 		
