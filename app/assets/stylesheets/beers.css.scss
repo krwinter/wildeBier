@@ -1,6 +1,33 @@
 // Place all the styles related to the Beers controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+#container {
+}
+
+#main-list {
+  margin : 10px;
+  border : 1px solid;
+  border-color : black;
+}
+
+#list {
+    overflow : auto;
+    height : 500px;
+}
+
+#list-holder {
+    padding : 10px;
+
+}
+#title-bar {
+  border-bottom : 1px solid;
+}
+
+.item {
+  border-bottom : 1px solid;
+  padding-top : 10px;
+  padding-bottom : 10px;
+}
 
 /*
 body { 

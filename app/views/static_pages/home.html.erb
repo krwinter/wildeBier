@@ -1,10 +1,10 @@
 <!--<%= javascript_include_tag "application" %>-->
 <div id="main-list" >
-    <div class="row-fluid">
-        <div class="title span8">
-            WildeBier!
+    <div class="row-fluid" id="title-bar">
+        <div class="title span10">
+            <h1>WildeBier!</h1>
         </div>
-        <div class="user-info span4">
+        <div class="user-info span2">
                 <% if signed_in? %>
                   <%= link_to current_user.first_name + " " + current_user.last_name, user_path(current_user) %>
                   <br />
@@ -25,7 +25,7 @@
         <%= current_user.to_json %>
     </script>
     
-    <div id="list"></div>
+    <div id="list" class="row-fluid"></div>
     <div id="listHolder"></div>
 </div>
 <!--

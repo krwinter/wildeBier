@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>WildeBier</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
@@ -13,7 +13,7 @@
 <% if !(params[:controller] == 'static_pages' && params[:action] == 'home') %>
     <%= render 'layouts/header' %>
 <% end %> 
-<div class="container">
+<div class="container row-fluid">
 <%= yield %>
 </div>
 
