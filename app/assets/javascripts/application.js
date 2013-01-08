@@ -16,35 +16,35 @@
 // 
 // We need to leave these in for now - they make the DELETE method work
 //
-//= require jquery
-//= require jquery_ujs
+// NOT = require jquery
+// NOT = require jquery_ujs
 
-require.config({
-	
-	paths : {
-		
-		jquery : 'jquery',
-		underscore : 'underscore',
-		backbone : 'backbone',
-		
-		text : 'require-text',
-		
-		collections : 'backbone/collections',
-		models : 'backbone/models',
-		views : 'backbone/views',
-		templates : 'backbone/templates',
-		controllers : 'backbone/controllers',
-		
-	},
-	
-	shim : {
-		'bootstrap' : {
-			deps : [ 'jquery' ],
-			exports : 'Bootstrap'
-		}
-	}
-	
-});
+// require.config({
+// 	
+	// paths : {
+// 		
+		// jquery : 'jquery',
+		// underscore : 'underscore',
+		// backbone : 'backbone',
+// 		
+		// text : 'require-text',
+// 		
+		// collections : 'backbone/collections',
+		// models : 'backbone/models',
+		// views : 'backbone/views',
+		// templates : 'backbone/templates',
+		// controllers : 'backbone/controllers',
+// 		
+	// },
+// 	
+	// shim : {
+		// 'bootstrap' : {
+			// deps : [ 'jquery' ],
+			// exports : 'Bootstrap'
+		// }
+	// }
+// 	
+// });
 
 
 require( ['jquery', 'backbone', 'underscore', 'app' ], 
