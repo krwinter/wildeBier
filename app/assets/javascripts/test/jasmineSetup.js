@@ -35,6 +35,7 @@ require.config({
 var specs = [];
 specs.push( 'test/spec/appSpec' )
 specs.push( 'test/spec/controllers/userControllerSpec' )
+specs.push( 'test/spec/controllers/fbControllerSpec' )
 specs.push( 'test/spec/models/beerSpec' )
 specs.push( 'test/spec/models/userSpec' )
 

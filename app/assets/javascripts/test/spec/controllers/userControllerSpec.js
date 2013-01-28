@@ -1,17 +1,34 @@
-define( [ 'controllers/userController', 'controllers/eventBus', 'models/user'], function( userController, eventBus,user ){
+//define( [ 'controllers/userController', 'controllers/eventBus', 'models/user'], function( userController, eventBus,user ){
+define(function(require, exports, module) {
 	
+	var userController = require('controllers/userController'),
+		fbController = require('controllers/fbController'),
+		eventBus = require('controllers/eventBus'),
+		user = require('models/user');
+		
+	
+		
 	describe('The userController', function() {
 		
 		beforeEach( function(){
 			
 			spyOn( eventBus, 'dispatch' );
 			spyOn( user, 'set' );
-			userController.getSavedUser();
+			spyOn( userController, 'getSavedUser' ).andCallThrough();
+			spyOn( fbController, 'init' );
+			userController.init();
 			 
 		});
 		
-		// TODO - user is undefined, not stubbing a real user
-		it('will get the saved user and set the app user', function() {
+		it('will initialize the Facebook controller', function() {
+			expect( fbController.init ).toHaveBeenCalled();
+		});
+		
+		it('will get the saved user', function() {
+			expect( userController.getSavedUser ).toHaveBeenCalled();
+		});
+		
+		it('will set the app user', function() {
 			expect( user.set ).toHaveBeenCalled();
 		});
 		

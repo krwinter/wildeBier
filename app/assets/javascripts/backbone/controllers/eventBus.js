@@ -5,6 +5,7 @@ define( [ 'jquery', 'backbone', 'underscore' ],
 		
 		savedUserRetrieved : 'savedUserRetrieved',
 		
+		fbSdkLoaded : 'fbSdkLoaded',
 		fbOnLoginStatus : 'fbOnLoginStatus',
 		fbOnLogin : 'fbOnLogin',
 		fbOnMeApi : 'fbOnMeApi'

@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 	var service =  require('controllers/services/cookieService'),
 		eventBus = require('controllers/eventBus');
 		User = require('models/user');
+		fbController = require('controllers/fbController');
 		
 	
 	var userController = {
@@ -13,6 +14,9 @@ define(function(require, exports, module) {
 		init : function() {
 			
 			console.log('user controller INIT');
+			
+			//we're using Facebook, so initialize it
+			fbController.init();
 			
 			this.getSavedUser();
 			
