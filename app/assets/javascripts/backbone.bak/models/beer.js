@@ -1,5 +1,5 @@
-define( [ 'jquery', 'backbone', 'underscore', 'models/user' ],
- 	function( $, Backbone, _, user ) {
+define( [ 'jquery', 'backbone', 'underscore' ],
+ 	function( $, Backbone, _ ) {
 	
 
 	var beer = Backbone.Model.extend({

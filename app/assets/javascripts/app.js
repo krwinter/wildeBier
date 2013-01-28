@@ -1,5 +1,16 @@
-define( ['views/listView', 'models/beer', 'models/eventBus', 'models/user', 'controllers/fbController' ], 
-function( ListView, Beer, eventBus, User, fbController ) {
+//define( ['views/listView', 'models/beer', 'models/eventBus', 'models/user', 'controllers/fbController' ], 
+//function( ListView, Beer, eventBus, User, fbController ) {
+define( [ 'models/beer', 'controllers/eventBus',
+		'controllers/userController', 'controllers/viewController'], 
+		function(beer, eventBus,
+			userController, viewController ) {	
+
+	function setupListeners() {
+		
+		// is run;
+		
+	}
+
 	
 
 	
@@ -8,6 +19,25 @@ function( ListView, Beer, eventBus, User, fbController ) {
 		init : function() {
 			console.log('=== INIT ===');
 			
+			setupListeners();
+			
+			viewController.init();
+			
+			userController.init();
+			
+			// fire up user controller
+			// get user from: 
+			//			local file storage (native app)
+			//			cookie (web app)
+			
+			
+			// then either present login / register
+			
+			
+			
+			// or get beer data
+			
+			/*
 			var userJSON = $( "#rails_user_data" ).html();
 			
 			if ( userJSON ) {
@@ -20,13 +50,12 @@ function( ListView, Beer, eventBus, User, fbController ) {
 			fbController.init();
 			
 			var list = new ListView( { el : $('#list')} );
-			//var list = new ListView();
-			$("#listHolder").html(list.el);
-        	//var beer = new Beer( { name: 'Belgian Leggy Blond' } );
 			
-		},
+			//$("#listHolder").html(list.el);
+			*/
+		}
 		
-		user : {}
+		
 	};
 	
 	return app;

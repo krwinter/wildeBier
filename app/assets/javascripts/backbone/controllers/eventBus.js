@@ -3,6 +3,8 @@ define( [ 'jquery', 'backbone', 'underscore' ],
 	
 	var events = {
 		
+		savedUserRetrieved : 'savedUserRetrieved',
+		
 		fbOnLoginStatus : 'fbOnLoginStatus',
 		fbOnLogin : 'fbOnLogin',
 		fbOnMeApi : 'fbOnMeApi'
