@@ -1,6 +1,9 @@
-define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user' ],
- 	function( $, Backbone, _, eventBus, user ) {
- 		
+/**
+ * Service to get user's login/authentication status from Facebook
+ */
+define(function(require, exports, module) {
+	
+	var eventBus = require('controllers/eventBus');
 	
 	function onLoginStatus( response ) {
 		
@@ -19,6 +22,6 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user' ]
 		
 	}
 
-	return service;
+	module.exports = service;
 
 } );

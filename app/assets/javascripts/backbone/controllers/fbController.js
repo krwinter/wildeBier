@@ -2,59 +2,99 @@
  * fbController.js
  * 
  * Controls all synching with Facebook
+ * As we get data from Facebook, we update our local User object with the data
+ * Once we get it all the userController will handle the reconciliation
  * 
  */
 define(function(require, exports, module) {
 	
 	var eventBus = require('controllers/eventBus'),
-		statusService = require('controllers/services/fbStatusService');
+		statusService = require('controllers/services/fbStatusService'),
+		apiService = require('controllers/services/fbApiService'),
+		User = require('models/user');
 	
 	//flags to check if we proceed
 	var sdkLoaded = false,
 		savedUserRetrieved = false;
 	
-	
+	/**
+	 * Fired on init, listens and waits for relevant events
+	 */
 	var setupListeners = function() {
 	
-		eventBus.listen( eventBus.e.savedUserRetrieved, onSavedUserRetrieved, fbController );	
-		eventBus.listen( eventBus.e.fbSdkLoaded, onSdkLoaded, fbController );
+		eventBus.listen( eventBus.e.savedUserRetrieved, onSavedUserRetrieved, controller );	
+		eventBus.listen( eventBus.e.fbSdkLoaded, onSdkLoaded, controller );
 		
-		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, fbController );
+		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, controller );
+		eventBus.listen( eventBus.e.fbOnMeApi, onMeApi, controller );
 	
 		
 	};
 	
+	/**
+	 * Handle loginStatus response from Facebook
+	 * 
+ 	 * @param {Object} response response from Facebook - see https://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
+	 */
 	var onLoginStatus = function( response ) {
 		
-		// fbStatusResponse = response;
-// 		
-		// if (response.status === 'connected') {
-		    // console.log('connected', response);
-// 		    
-			// fbController.getUser();
-// 		    
-	   		// // eventBus.dispatch( 'fbLoginSuccess', response )
-		// } else {
-						// // UPDATE FACEBOOK INFO VIEW
-			// var fbLoginElement = $('.fb-login');
-			// fbLoginElement.html('Login With Facebook');
-// 			
-			// // click to login
-			// fbLoginElement.click( fbController.login );
-// 			
-			// if (response.status === 'not_authorized') {
-			    // console.log('not auth');
-				// updateUser();
-// 				
-			// } else {
-			    // console.log('not logged in');
-				// updateUser( );
-			// }
-		// }
+		// set our status
+		// TODO - do we need to do this, since we do it already in both cases?  
+		User.set( 'fb_status', response.status );
+		
+		//if we're authenticated, get user
+		if ( response.status === 'connected' ) {
+			
+			controller.getAuthenticatedUserData();
+		
+		} else { // 'not_authorized' || not logged in
+			
+			updateLocalUser( response );
+			
+			// dispatch event saying we have everything
+			eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
+		} 
+	};
+	
+	var updateLocalUser = function( response ) {
+		
+		var newUserData = {};
+		
+		newUserData.fb_status = response.status;
+		
+		if ( response.authResponse ) {
+			
+			newUserData.fb_user_id = response.authResponse.userID;
+			newUserData.fb_access_token = response.authResponse.accessToken;
+			newUserData.fb_signed_request = response.authResponse.signedRequest;
+			newUserData.fb_expires = response.authResponse.expiresIn;
+			
+		}
+		
+		//TODO - for now we clear data in user controller
+		
+		User.set( newUserData );
 		
 	}
 	
-
+	/**
+	 * Handle ME Api response from Facebook
+	 * 
+ 	 * @param {Object} response response from Facebook - see https://developers.facebook.com/docs/reference/javascript/FB.api/
+	 */
+	var onMeApi = function( response ){
+		
+		// update local user object
+		updateLocalUser( response );
+		
+		// dispatch event saying we have everything
+		eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
+		
+	};
+	
+	/**
+	 * Load FB SDK and fire event when loaded
+	 */
 	var initFbSdk = function() {
 		
 		 (function(d){
@@ -86,6 +126,9 @@ define(function(require, exports, module) {
 		
 	};
 	
+	/**
+	 * Handler for when saved user is retrieved by other component in app
+	 */
 	var onSavedUserRetrieved = function() {
 		
 		savedUserRetrieved = true;
@@ -96,6 +139,9 @@ define(function(require, exports, module) {
 		}
 	}
 
+	/**
+	 * Handler invoked after FB SDK is loaded
+	 */
 	var onSdkLoaded = function() {
 		
 		sdkLoaded = true;
@@ -108,21 +154,27 @@ define(function(require, exports, module) {
 	
 	
 	
-	
+	/**
+	 * Public object that is exported
+	 */
 	var controller = {
 		
+		/**
+		 * Called on controller instantiation
+		 */
 		init : function() {
-			
-			console.log('fbController INIT');
+			console.log('controller INIT');
 
 			setupListeners();
 			
 			initFbSdk();
 			
-			
 		},
 		
-		//TODO- temp, test - make tests work beter - remove
+		/**
+		 * For tests only - resets
+		 * TODO- temp, test - make tests work beter - remove
+		 */
 		reset : function() {
 			
 			sdkLoaded = false;
@@ -130,6 +182,9 @@ define(function(require, exports, module) {
 			
 		},
 		
+		/**
+		 * We don't know FB status of user, so we want to make API call to see'
+		 */
 		getLoginStatus : function() {
 			
 			if ( savedUserRetrieved && sdkLoaded ) {
@@ -137,6 +192,15 @@ define(function(require, exports, module) {
 				statusService.getLoginStatus();
 			
 			}
+		},
+		
+		/**
+		 * User is authenticated, so we trigger call to get extra info from FB 
+		 */
+		getAuthenticatedUserData : function() {
+			
+			apiService.loadMe();
+			
 		}
 		
 	}

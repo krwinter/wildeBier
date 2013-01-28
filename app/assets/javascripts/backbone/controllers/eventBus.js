@@ -1,6 +1,11 @@
-define( [ 'jquery', 'backbone', 'underscore' ],
- 	function( $, Backbone, _ ) {
-	
+/**
+ * Main event bus for app
+ */
+define(function(require, exports, module ){
+
+	var _ = require('underscore'),
+		Backbone = require('backbone');
+
 	var events = {
 		
 		savedUserRetrieved : 'savedUserRetrieved',
@@ -8,18 +13,22 @@ define( [ 'jquery', 'backbone', 'underscore' ],
 		fbSdkLoaded : 'fbSdkLoaded',
 		fbOnLoginStatus : 'fbOnLoginStatus',
 		fbOnLogin : 'fbOnLogin',
-		fbOnMeApi : 'fbOnMeApi'
+		fbOnMeApi : 'fbOnMeApi',
+		
+		// after we complete all our calls
+		fbStatusRetrievalComplete : 'fbStatusRetrievalComplete',
+		
+		// after we sort fb and local user
+		userReconciled : 'userReconciled'
 	};
 	
 
-//	var eventBus = Backbone.Model.extend({
 	var eventBus = {
 	
 	    busObj : {},
 
 	    initialize : function() {
 	       	console.log('event bus init');
-	       	//_.extend( this.busObj, Backbone.Events );
 	    },
 	    
 	    
@@ -49,6 +58,6 @@ define( [ 'jquery', 'backbone', 'underscore' ],
 	
 	_.extend( eventBus.busObj, Backbone.Events );
 	
-	return eventBus;
+	module.exports = eventBus;
 
 });

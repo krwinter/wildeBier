@@ -1,4 +1,4 @@
-define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus' ],
+define( [ 'jquery', 'backbone', 'underscore', 'controllers/eventBus' ],
  	function( $, Backbone, _, eventBus ) {
 	
 

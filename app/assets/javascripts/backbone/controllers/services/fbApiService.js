@@ -1,6 +1,10 @@
-define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user' ],
- 	function( $, Backbone, _, eventBus, user ) {
- 		
+/**
+ * Service to make API calls to Facebook 
+ */
+define(function(require, exports, module) {
+
+	var eventBus = require('controllers/eventBus');
+	
 
 	function onMe( response ) {
 		
@@ -16,6 +20,6 @@ define( [ 'jquery', 'backbone', 'underscore', 'models/eventBus', 'models/user' ]
 		}
 	}
 	
-	return service;
+	module.exports = service;
 
 } );
