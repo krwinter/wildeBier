@@ -53,10 +53,8 @@ define( [ 'jquery', 'backbone', 'underscore', 'controllers/eventBus' ],
 	
 	});
 	
-	//eventBus.listen( 'fbLoginSuccess', onFbLogin, user );
 
 	return ( instance ) ? instance : instance = new user();
 	
-	//return user;
 
 }); 

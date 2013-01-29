@@ -3,7 +3,7 @@
 
 define(function(require, exports, module) {
 	
-	var service =  require('controllers/services/cookieService'),
+	var cookieService =  require('controllers/services/cookieService'),
 		eventBus = require('controllers/eventBus'),
 		User = require('models/user'),
 		fbController = require('controllers/fbController');
@@ -33,6 +33,24 @@ define(function(require, exports, module) {
 		
 		// 3. update saved user appropriately - i.e. rails login, or write to local file
 		
+		//we do have a saved user
+		if ( user && user.id ) {
+			
+			// we update db with what we have locally 
+			
+		
+		// we don't have a local saved user, see if we have a remote one	
+		} else if ( user.fb_user_id ){
+			
+			// we fetch based on fbid
+		
+		// we got no known user
+		} else {
+			
+			
+		}
+		
+		
 	};
 	
 	var userController = {
@@ -51,7 +69,7 @@ define(function(require, exports, module) {
 		// saved, so we assume will be synchronous
 		getSavedUser	: function() {
 			
-			var userObj = service.get();
+			var userObj = cookieService.get();
 			
 			var user = User.set( userObj );
 			
