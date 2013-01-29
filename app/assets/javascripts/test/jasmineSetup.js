@@ -12,8 +12,8 @@ require.config({
 		jquery : '../../../vendor/assets/javascripts/jquery',
 		underscore : '../../../vendor/assets/javascripts/underscore',
 		backbone : '../../../vendor/assets/javascripts/backbone',
+		text : '../../../vendor/assets/javascripts/require-text',
 		
-		text : 'require-text',
 		
 		collections : 'backbone/collections',
 		models : 'backbone/models',
@@ -33,11 +33,10 @@ require.config({
 });
 
 var specs = [];
-specs.push( 'test/spec/appSpec' )
-specs.push( 'test/spec/controllers/userControllerSpec' )
-specs.push( 'test/spec/controllers/fbControllerSpec' )
-specs.push( 'test/spec/models/beerSpec' )
-specs.push( 'test/spec/models/userSpec' )
+//specs.push( 'test/spec/appSpec' )
+//specs.push( 'test/spec/controllers/userControllerSpec' )
+specs.push( 'test/spec/controllers/viewControllerSpec' );
+specs.push( 'test/spec/controllers/fbControllerSpec' );
 
 
 require( specs , 

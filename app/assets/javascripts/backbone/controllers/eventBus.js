@@ -18,7 +18,7 @@ define(function(require, exports, module ){
 		// after we complete all our calls
 		fbStatusRetrievalComplete : 'fbStatusRetrievalComplete',
 		
-		// after we sort fb and local user
+		// called after we've gotten all info we can about user
 		userReconciled : 'userReconciled'
 	};
 	

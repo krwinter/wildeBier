@@ -1,6 +1,8 @@
-define( [ 'jquery', 'backbone', 'underscore', 'controllers/eventBus' ],
- 	function( $, Backbone, _, eventBus ) {
+define(function(require, exports, module) {
+
 	
+	var Backbone = require('backbone'),
+		eventBus = require('controllers/eventBus');
 
 	function getQueryUrl( queryObj ) {
 		
@@ -53,8 +55,8 @@ define( [ 'jquery', 'backbone', 'underscore', 'controllers/eventBus' ],
 	
 	});
 	
-
-	return ( instance ) ? instance : instance = new user();
+	// TODO - do we really want this as an enforced singleton?
+	module.exports =  ( instance ) ? instance : instance = new user();
 	
 
 }); 

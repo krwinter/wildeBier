@@ -1,6 +1,7 @@
 //this is currently the web app version, but we can swap in a native app version
 
-define( [], function() {
+define(function(require, exports, module) {
+
 	
 	var service = {
 		
@@ -24,6 +25,6 @@ define( [], function() {
 		
 	}
 	
-	return service;
+	module.exports = service;
 	
 });

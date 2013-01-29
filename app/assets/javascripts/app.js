@@ -1,17 +1,16 @@
-//define( ['views/listView', 'models/beer', 'models/eventBus', 'models/user', 'controllers/fbController' ], 
-//function( ListView, Beer, eventBus, User, fbController ) {
-define( [ 'models/beer', 'controllers/eventBus',
-		'controllers/userController', 'controllers/viewController'], 
-		function(beer, eventBus,
-			userController, viewController ) {	
 
-	function setupListeners() {
+define(function(require, exports, module) {
+	
+	var viewController = require('controllers/viewController'),
+		userController = require('controllers/userController');
+
+	var viewTarget = '#app-main';
+	
+	var setupListeners = function() {
 		
 		// is run;
 		
-	}
-
-	
+	};
 
 	
 	var app = {
@@ -21,7 +20,7 @@ define( [ 'models/beer', 'controllers/eventBus',
 			
 			setupListeners();
 			
-			viewController.init();
+			viewController.init( {rootElement : viewTarget });
 			
 			userController.init();
 			
@@ -58,5 +57,5 @@ define( [ 'models/beer', 'controllers/eventBus',
 		
 	};
 	
-	return app;
+	module.exports = app;
 });

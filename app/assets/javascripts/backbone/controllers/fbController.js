@@ -13,9 +13,6 @@ define(function(require, exports, module) {
 		apiService = require('controllers/services/fbApiService'),
 		User = require('models/user');
 	
-	//flags to check if we proceed
-	var sdkLoaded = false,
-		savedUserRetrieved = false;
 	
 	/**
 	 * Fired on init, listens and waits for relevant events
@@ -39,7 +36,9 @@ define(function(require, exports, module) {
 	var onLoginStatus = function( response ) {
 		
 		// set our status
-		// TODO - do we need to do this, since we do it already in both cases?  
+		// TODO - do we need to do this, since we do it already in both cases?
+		//TODO - do we want to mess with User here?  breaking encapsulation?
+		//	may be ok if we only do FB-specific user attributes  
 		User.set( 'fb_status', response.status );
 		
 		//if we're authenticated, get user
@@ -56,6 +55,9 @@ define(function(require, exports, module) {
 		} 
 	};
 	
+	/**
+	 * Update local User model with data from Me Api call
+	 */
 	var updateLocalUser = function( response ) {
 		
 		var newUserData = {};
@@ -71,8 +73,7 @@ define(function(require, exports, module) {
 			
 		}
 		
-		//TODO - for now we clear data in user controller
-		
+		//TODO - OK to break encapsulation here?  may be OK if we stick to FB-specific user stuff
 		User.set( newUserData );
 		
 	}
@@ -131,25 +132,20 @@ define(function(require, exports, module) {
 	 */
 	var onSavedUserRetrieved = function() {
 		
-		savedUserRetrieved = true;
+		if ( User.get('fb_user_id') ) {
+			
+			controller.loadSdk();
 		
-		//TODO - more elegant way of making sure all conditions are met
-		if ( sdkLoaded ) {
-			controller.getLoginStatus();
 		}
+		
 	}
 
 	/**
 	 * Handler invoked after FB SDK is loaded
 	 */
 	var onSdkLoaded = function() {
-		
-		sdkLoaded = true;
 
-		//TODO - more elegant way of making sure all conditions are met
-		if ( savedUserRetrieved ) {
 			controller.getLoginStatus();
-		}
 	}
 	
 	
@@ -167,8 +163,11 @@ define(function(require, exports, module) {
 
 			setupListeners();
 			
-			initFbSdk();
+		},
+		
+		loadSdk : function() {
 			
+			initFbSdk();
 		},
 		
 		/**

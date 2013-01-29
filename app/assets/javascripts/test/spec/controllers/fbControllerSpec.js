@@ -7,6 +7,7 @@ define(function(require, exports, module ){
 	describe('Facebook controller',function(){
 		
 		beforeEach( function(){
+			spyOn( fbController, 'loadSdk');
 			spyOn( fbController, 'getLoginStatus');
 			fbController.init();
 		});
@@ -14,32 +15,38 @@ define(function(require, exports, module ){
 		//TODO - find better way to do this - this function is only there for the tests
 		afterEach( function() {
 			fbController.reset();
+			User.clear();
 		});
 		
 		// ------- login status ----
 		
-		it('will ONLY get login status after sdk loaded and saved user retrieved', function(){
-			eventBus.dispatch( eventBus.e.fbSdkLoaded );
+		
+		it('will NOT load SDK if there is no saved user with FB userID', function(){
+			
+			var user = User.set( { 	id : 3,
+									fb_user_id : null });
+			
 			eventBus.dispatch( eventBus.e.savedUserRetrieved );
+			expect( fbController.loadSdk ).not.toHaveBeenCalled();
+		});
+
+		it('WILL load SDK if there IS a saved user with FB userID', function(){
+			
+			var user = User.set( { 	id : 3,
+									fb_user_id : 'abc123' });
+			
+			eventBus.dispatch( eventBus.e.savedUserRetrieved );
+			expect( fbController.loadSdk ).toHaveBeenCalled();
+		});
+		
+		it('will get login status after sdk loaded', function(){
+			eventBus.dispatch( eventBus.e.fbSdkLoaded );
 			expect( fbController.getLoginStatus ).toHaveBeenCalled();
 		});
 		
-		it('will NOT get login status if sdk loaded and saved user not retrieved', function(){
-			eventBus.dispatch( eventBus.e.fbSdkLoaded );
-			//eventBus.dispatch( eventBus.e.savedUserRetrieved );
-			expect( fbController.getLoginStatus ).not.toHaveBeenCalled();
-		});
-		
-		it('will NOT get login status if sdk not loaded and saved user retrieved', function(){
-			//eventBus.dispatch( eventBus.e.fbSdkLoaded );
-			eventBus.dispatch( eventBus.e.savedUserRetrieved );
-			expect( fbController.getLoginStatus ).not.toHaveBeenCalled();
-		});
 		
 		
-
-		
-		// response from onLoginStatus
+		// ======   response from onLoginStatus  =======
 		// TODO - make async?
 		
 		describe('in response to login status', function() {
@@ -137,8 +144,6 @@ define(function(require, exports, module ){
 		
 		
 	});
-	
-	
 	
 	
 });

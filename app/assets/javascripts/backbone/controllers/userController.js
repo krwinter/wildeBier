@@ -6,14 +6,14 @@ define(function(require, exports, module) {
 	var cookieService =  require('controllers/services/cookieService'),
 		eventBus = require('controllers/eventBus'),
 		User = require('models/user'),
-		fbController = require('controllers/fbController');
+		fbController = require('controllers/fbController'),
+		Backbone = require('backbone');
 	
 	/**
 	 * Fired on init, listens and waits for relevant events
 	 */
 	var setupListeners = function() {
-	
-		eventBus.listen( eventBus.e.fbStatusRetrievalComplete, onFbStatusRetrievalComplete, userController );	
+		eventBus.listen( eventBus.e.fbStatusRetrievalComplete, onFbStatusRetrievalComplete, controller );	
 		
 	};
 	
@@ -23,41 +23,39 @@ define(function(require, exports, module) {
 	 */
 	var onFbStatusRetrievalComplete = function() {
 		
-		// locally we have saved User data (if any) from cookie / file
+		console.log('fb status retrieval complete');
 		
-		// we have this augmented with FB status + details (if any)
 		
-		// 1. get user data from db
-		
-		// 2. update db with updated data
-		
-		// 3. update saved user appropriately - i.e. rails login, or write to local file
-		
-		//we do have a saved user
-		if ( user && user.id ) {
+		// sync any changes we've accumulated
+		Backbone.sync( 'update', User, {
 			
-			// we update db with what we have locally 
+			success : dbUpdateSuccess,
+			error : function( a,b,c ) { 
+				console.log( 'ERROR!!!!');
+				}
 			
+		} );
 		
-		// we don't have a local saved user, see if we have a remote one	
-		} else if ( user.fb_user_id ){
-			
-			// we fetch based on fbid
-		
-		// we got no known user
-		} else {
-			
-			
-		}
-		
-		
+		//TODO - REMOVE after figuring out how to test correctly
+		eventBus.dispatch( eventBus.e.userReconciled );
 	};
 	
-	var userController = {
+	/**
+	 * Called when we successfully update user db
+	 */
+	var dbUpdateSuccess = function() {
+		console.log('db update success');
+		eventBus.dispatch( eventBus.e.userReconciled );
+
+	}
+	
+	var controller = {
 		
 		init : function() {
 			
 			console.log('user controller INIT');
+			
+			setupListeners();
 			
 			//we're using Facebook, so initialize it
 			fbController.init();
@@ -82,6 +80,6 @@ define(function(require, exports, module) {
 		
 	}
 	
-	return userController;
+	module.exports = controller;
 	
 });

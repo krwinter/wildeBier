@@ -14,6 +14,7 @@
   <!-- include spec files here... -->
  <script src="scripts/require.js"></script>
   <script src="scripts/jquery.js"></script>
+  <script src="scripts/sinon-1.5.2.js"></script>
   <script src="jasmineSetup.js"></script>
 
   <script type="text/javascript">
@@ -35,7 +36,9 @@
         if (currentWindowOnload) {
           currentWindowOnload();
         }
-        execJasmine();
+        //execJasmine();
+        //TODO - need this so xhr text! includes can load
+        setTimeout( execJasmine, 1000 );
       };
 
       function execJasmine() {

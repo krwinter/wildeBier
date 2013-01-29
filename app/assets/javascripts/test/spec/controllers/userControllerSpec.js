@@ -4,7 +4,8 @@ define(function(require, exports, module) {
 	var userController = require('controllers/userController'),
 		fbController = require('controllers/fbController'),
 		eventBus = require('controllers/eventBus'),
-		user = require('models/user');
+		User = require('models/user'),
+		Backbone = require('backbone');
 		
 	
 		
@@ -12,10 +13,11 @@ define(function(require, exports, module) {
 		
 		beforeEach( function(){
 			
-			spyOn( eventBus, 'dispatch' );
-			spyOn( user, 'set' );
+			spyOn( eventBus, 'dispatch' ).andCallThrough();;
+			spyOn( User, 'set' );
 			spyOn( userController, 'getSavedUser' ).andCallThrough();
 			spyOn( fbController, 'init' );
+			
 			userController.init();
 			 
 		});
@@ -28,14 +30,54 @@ define(function(require, exports, module) {
 			expect( userController.getSavedUser ).toHaveBeenCalled();
 		});
 		
-		it('will set the app user', function() {
-			expect( user.set ).toHaveBeenCalled();
+		describe('the saved user is retrieved', function() {
+			
+		
+			it('saved user will be set as the app user', function() {
+				expect( User.set ).toHaveBeenCalled();
+			});
+			
+			it('event dispatched after saved user retrieved', function() {
+				expect( eventBus.dispatch ).toHaveBeenCalledWith( eventBus.e.savedUserRetrieved, undefined );
+			});
+		
 		});
 		
-		it('will dispatch an event when it gets a saved user', function() {
-			expect( eventBus.dispatch ).toHaveBeenCalledWith( eventBus.e.savedUserRetrieved, undefined );
+		describe('after the Facebook status is retrieved', function() {
+			
+			beforeEach( function() {
+				spyOn( Backbone, 'sync');
+				
+				User.set( { id : 1 });
+				
+				//this.server = sinon.fakeServer.create();
+				
+			     // [200, {"Content-Type": "application/json"},
+			     // '{"id":1,"title" }']);
+			      // [200, {"Content-Type": "application/json"},
+			      // '{"id":123,"title":"Hollywood - Part 2"}']);
+				
+			});
+			
+			afterEach( function() {
+				//this.server.restore();
+			});
+			
+			it('the database will be updated', function() {
+				eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
+				expect( Backbone.sync ).toHaveBeenCalled();
+			});
+			
+			//TODO - figure out correct response to trigger success
+			it('the reconciled event will be fired', function() {
+				eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
+				//this.server.respondWith([200,  {}, "{ id : '1' }" ] );
+				//this.server.respond();
+				expect( eventBus.dispatch ).toHaveBeenCalledWith( eventBus.e.userReconciled );
+				
+			});
+			
 		});
-		
 		
 	});
 	
