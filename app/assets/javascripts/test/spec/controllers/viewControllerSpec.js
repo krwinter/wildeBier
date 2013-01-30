@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
 	
-	var viewController = require('controllers/viewController');
-	//	eventBus = require('controllers/eventBus');
+	var viewController = require('controllers/viewController'),
+		User = require('models/user'),
+		eventBus = require('controllers/eventBus');
 
 	
 	describe('View controller', function() {
@@ -16,20 +17,7 @@ define(function(require, exports, module) {
 				viewController.rootElement = 'body';
 			});
 			
-			//var flag = false;
-			 it('runs', function() {
-				// runs( function() {
-					// setTimeout( function(){
-						// flag = true;
-					// }, 1000 );	
-				// });
-				// waitsFor( function() {
-					// return flag;
-				// }, "waiting", 1100);
-// 				
-				expect(true).toBe(true);
-			 });
-			
+		
 			it('sets a root element if passd in', function() {
 				var root = '#app-main';
 				viewController.init( { rootElement : root } );
@@ -57,11 +45,19 @@ define(function(require, exports, module) {
 				
 				beforeEach( function() {
 					spyOn( viewController, 'showUserView' ).andCallThrough();
+					spyOn( viewController, 'showLoginView' ).andCallThrough();
 				});
 				
 				it('will show user view if user is logged in', function() {
+					User.set( { id : 1, first_name : 'Test', last_name : 'User' });
 					eventBus.dispatch( eventBus.e.userReconciled );
 					expect( viewController.showUserView ).toHaveBeenCalled();
+				});
+
+				it('will show login view if user is NOT logged in', function() {
+					User.clear();
+					eventBus.dispatch( eventBus.e.userReconciled );
+					expect( viewController.showLoginView ).toHaveBeenCalled();
 				});
 				
 			});

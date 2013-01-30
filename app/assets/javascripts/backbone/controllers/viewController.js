@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
 	
-	var DefaultView = require('views/defaultView');
+	var DefaultView = require('views/defaultView'),
 		UserView = require('views/userView'),
+		LoginView = require('views/loginView'),
 		User = require('models/user'),
 		eventBus = require('controllers/eventBus');
 
@@ -14,7 +15,12 @@ define(function(require, exports, module) {
 	
 	var onUserReconciled = function(){
 		
-		viewController.showUserView();
+		if ( User.get('id') ) {
+			viewController.showUserView();
+		} else {
+			viewController.showLoginView();
+		}
+		
 	}
 	
 	
@@ -51,6 +57,15 @@ define(function(require, exports, module) {
 			var view = new UserView();
 			$( this.rootElement ).append( view.el );
 			this.currentView = view;
+			
+		},
+		
+		showLoginView : function() {
+			
+			var view = new LoginView();
+			$( this.rootElement ).append( view.el );
+			this.currentView = view;
+			
 			
 		}
 		

@@ -1,4 +1,9 @@
-//this is currently the web app version, but we can swap in a native app version
+/**
+ * Session management / cookie service
+ * Service interface between the app and session management
+ * 
+ * currently the web app version, uses cookies and rails sessions, but we can swap in a native app version
+ */
 
 define(function(require, exports, module) {
 
@@ -18,6 +23,16 @@ define(function(require, exports, module) {
 			}
 			
 			return userObj;
+			
+		},
+		
+		create : function() {
+			
+		},
+		
+		signout : function() {
+			
+			
 			
 		}	
 		

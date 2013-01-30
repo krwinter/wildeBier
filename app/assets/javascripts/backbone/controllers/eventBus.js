@@ -19,7 +19,10 @@ define(function(require, exports, module ){
 		fbStatusRetrievalComplete : 'fbStatusRetrievalComplete',
 		
 		// called after we've gotten all info we can about user
-		userReconciled : 'userReconciled'
+		userReconciled : 'userReconciled',
+		
+		initiateSignout : 'initiateSignout'
+
 	};
 	
 

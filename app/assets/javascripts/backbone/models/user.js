@@ -50,6 +50,11 @@ define(function(require, exports, module) {
 
    	    	return '/users/' + this.get( 'id' );
     	
+	    },
+	    
+	    known : function() {
+	    	
+	    	return ( this.get('id') );
 	    }
 		
 	

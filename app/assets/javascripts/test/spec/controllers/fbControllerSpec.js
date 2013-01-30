@@ -7,37 +7,20 @@ define(function(require, exports, module ){
 	describe('Facebook controller',function(){
 		
 		beforeEach( function(){
-			spyOn( fbController, 'loadSdk');
 			spyOn( fbController, 'getLoginStatus');
+			spyOn( eventBus, 'dispatch').andCallThrough();
+			
+			// we're not really spying on this, just disabling loading the sdk for our tests
+			spyOn( fbController, 'loadSdk' );
+			
 			fbController.init();
 		});
 		
-		//TODO - find better way to do this - this function is only there for the tests
-		afterEach( function() {
-			fbController.reset();
-			User.clear();
-		});
-		
+		// afterEach( function() {
+			// User.clear();
+		// });
+// 		
 		// ------- login status ----
-		
-		
-		it('will NOT load SDK if there is no saved user with FB userID', function(){
-			
-			var user = User.set( { 	id : 3,
-									fb_user_id : null });
-			
-			eventBus.dispatch( eventBus.e.savedUserRetrieved );
-			expect( fbController.loadSdk ).not.toHaveBeenCalled();
-		});
-
-		it('WILL load SDK if there IS a saved user with FB userID', function(){
-			
-			var user = User.set( { 	id : 3,
-									fb_user_id : 'abc123' });
-			
-			eventBus.dispatch( eventBus.e.savedUserRetrieved );
-			expect( fbController.loadSdk ).toHaveBeenCalled();
-		});
 		
 		it('will get login status after sdk loaded', function(){
 			eventBus.dispatch( eventBus.e.fbSdkLoaded );
@@ -55,7 +38,6 @@ define(function(require, exports, module ){
 				
 				spyOn( fbController, 'getAuthenticatedUserData');
 				spyOn( User, 'set').andCallThrough();
-				spyOn( eventBus, 'dispatch').andCallThrough();
 				
 			});
 			

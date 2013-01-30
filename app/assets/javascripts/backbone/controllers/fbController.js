@@ -19,7 +19,6 @@ define(function(require, exports, module) {
 	 */
 	var setupListeners = function() {
 	
-		eventBus.listen( eventBus.e.savedUserRetrieved, onSavedUserRetrieved, controller );	
 		eventBus.listen( eventBus.e.fbSdkLoaded, onSdkLoaded, controller );
 		
 		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, controller );
@@ -85,6 +84,7 @@ define(function(require, exports, module) {
 	 */
 	var onMeApi = function( response ){
 		
+		console.log('onMeApi');
 		// update local user object
 		updateLocalUser( response );
 		
@@ -110,6 +110,7 @@ define(function(require, exports, module) {
 	   
 	   
 	    // Additional JS functions here
+	    //TODO - parameterize FB config
 		  window.fbAsyncInit = function() {
 		    FB.init({
 		      appId      : '132021983616250', // App ID
@@ -127,27 +128,14 @@ define(function(require, exports, module) {
 		
 	};
 	
-	/**
-	 * Handler for when saved user is retrieved by other component in app
-	 */
-	var onSavedUserRetrieved = function() {
-		
-		if ( User.get('fb_user_id') ) {
-			
-			controller.loadSdk();
-		
-		}
-		
-	}
 
 	/**
 	 * Handler invoked after FB SDK is loaded
 	 */
 	var onSdkLoaded = function() {
 
-			controller.getLoginStatus();
+		controller.getLoginStatus();
 	}
-	
 	
 	
 	/**
@@ -159,38 +147,29 @@ define(function(require, exports, module) {
 		 * Called on controller instantiation
 		 */
 		init : function() {
+			
 			console.log('controller INIT');
 
 			setupListeners();
 			
+			this.loadSdk();
 		},
 		
+		/**
+		 * We break this out separately for tests - make it public so we can disable during tests so we don't do SDK auth 100x each run
+		 */
 		loadSdk : function() {
 			
 			initFbSdk();
 		},
 		
-		/**
-		 * For tests only - resets
-		 * TODO- temp, test - make tests work beter - remove
-		 */
-		reset : function() {
-			
-			sdkLoaded = false;
-			savedUserRetrieved = false;
-			
-		},
 		
 		/**
 		 * We don't know FB status of user, so we want to make API call to see'
 		 */
 		getLoginStatus : function() {
 			
-			if ( savedUserRetrieved && sdkLoaded ) {
-				
 				statusService.getLoginStatus();
-			
-			}
 		},
 		
 		/**
@@ -198,7 +177,8 @@ define(function(require, exports, module) {
 		 */
 		getAuthenticatedUserData : function() {
 			
-			apiService.loadMe();
+			console.log('get auth user data');
+			//apiService.loadMe();
 			
 		}
 		
