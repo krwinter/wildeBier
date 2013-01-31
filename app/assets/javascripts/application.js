@@ -29,6 +29,7 @@
 // 		
 		// text : 'require-text',
 // 		
+		// config : 'backbone/config',
 		// collections : 'backbone/collections',
 		// models : 'backbone/models',
 		// views : 'backbone/views',

@@ -1,11 +1,16 @@
+# RequireJs config here
+# This file is used by Rails asset pipeline to resolve file paths
+
 paths : 
     
     #jquery : 'jquery',
     #underscore : 'underscore',
     #backbone : 'backbone',
+    #q : 'q',
     
     text : require-text
     
+    config : 'backbone/config'
     collections : 'backbone/collections'
     models : 'backbone/models'
     views : 'backbone/views'

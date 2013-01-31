@@ -8,9 +8,11 @@
  */
 define(function(require, exports, module) {
 	
-	var eventBus = require('controllers/eventBus'),
+	var config = require('config/config'),
+		eventBus = require('controllers/eventBus'),
 		statusService = require('controllers/services/fbStatusService'),
 		apiService = require('controllers/services/fbApiService'),
+		logoutService = require('controllers/services/fbLogoutService'),
 		User = require('models/user');
 	
 	
@@ -23,6 +25,8 @@ define(function(require, exports, module) {
 		
 		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, controller );
 		eventBus.listen( eventBus.e.fbOnMeApi, onMeApi, controller );
+		eventBus.listen( eventBus.e.fbOnLogout, onFbLogout, controller );	
+
 	
 		
 	};
@@ -34,11 +38,8 @@ define(function(require, exports, module) {
 	 */
 	var onLoginStatus = function( response ) {
 		
-		// set our status
-		// TODO - do we need to do this, since we do it already in both cases?
-		//TODO - do we want to mess with User here?  breaking encapsulation?
-		//	may be ok if we only do FB-specific user attributes  
-		User.set( 'fb_status', response.status );
+		// this should be done nby else block, or when me api returns
+		//User.set( 'fb_status', response.status );
 		
 		//if we're authenticated, get user
 		if ( response.status === 'connected' ) {
@@ -49,13 +50,26 @@ define(function(require, exports, module) {
 			
 			updateLocalUser( response );
 			
-			// dispatch event saying we have everything
-			eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
 		} 
 	};
 	
 	/**
-	 * Update local User model with data from Me Api call
+	 * Handle ME Api response from Facebook
+	 * 
+ 	 * @param {Object} response response from Facebook - see https://developers.facebook.com/docs/reference/javascript/FB.api/
+	 */
+	var onMeApi = function( response ){
+		
+		console.log('onMeApi');
+		
+		// update local user object
+		updateLocalUser( response );
+		
+	};
+	
+	/**
+	 * Update app user with new data - parse response and
+	 * then dispatch for userController to deal with
 	 */
 	var updateLocalUser = function( response ) {
 		
@@ -72,25 +86,24 @@ define(function(require, exports, module) {
 			
 		}
 		
-		//TODO - OK to break encapsulation here?  may be OK if we stick to FB-specific user stuff
-		User.set( newUserData );
+		eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete, newUserData );
 		
 	}
 	
-	/**
-	 * Handle ME Api response from Facebook
-	 * 
- 	 * @param {Object} response response from Facebook - see https://developers.facebook.com/docs/reference/javascript/FB.api/
-	 */
-	var onMeApi = function( response ){
+	
+	var onFbLogout = function( response ) {
 		
-		console.log('onMeApi');
-		// update local user object
-		updateLocalUser( response );
+		//update user, dispatch event
+		var userObj = {
+			
+				fb_status : response.status
+			 
+			 	// and anything else
+			 };
 		
-		// dispatch event saying we have everything
-		eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
 		
+		eventBus.dispatch( eventBus.e.fbSignoutComplete, userObj );
+
 	};
 	
 	/**
@@ -113,7 +126,7 @@ define(function(require, exports, module) {
 	    //TODO - parameterize FB config
 		  window.fbAsyncInit = function() {
 		    FB.init({
-		      appId      : '132021983616250', // App ID
+		      appId      : config.fbAppId, //'132021983616250'
 		      //channelUrl : '//quiet-thicket-1665.herokuapp.com/', // Channel File
 		      status     : true, // check login status
 		      cookie     : true, // enable cookies to allow the server to access the session
@@ -169,7 +182,7 @@ define(function(require, exports, module) {
 		 */
 		getLoginStatus : function() {
 			
-				statusService.getLoginStatus();
+			statusService.getLoginStatus();
 		},
 		
 		/**
@@ -178,8 +191,14 @@ define(function(require, exports, module) {
 		getAuthenticatedUserData : function() {
 			
 			console.log('get auth user data');
-			//apiService.loadMe();
+			apiService.loadMe();
 			
+		},
+		
+		
+		signout : function() {
+			
+			logoutService.logout();
 		}
 		
 	}

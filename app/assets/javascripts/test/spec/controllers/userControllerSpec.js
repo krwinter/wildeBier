@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 		eventBus = require('controllers/eventBus'),
 		User = require('models/user'),
 		Backbone = require('backbone'),
-		cookieService = require('controllers/services/cookieService');
+		sessionService = require('controllers/services/sessionService');
 		
 	
 		
@@ -105,17 +105,56 @@ define(function(require, exports, module) {
 				
 			});
 			
+			describe('the user signs out,', function() {
+				
+				it('the user controller signout function is called when the initiateSignout event is dispatched', function() {
+					spyOn( userController, 'initiateSignout' );
+					eventBus.dispatch( eventBus.e.initiateSignout );
+					expect( userController.initiateSignout ).toHaveBeenCalled();
+				});
+				
+				it('sessionService signout and fb signout are called', function() {
+					spyOn( sessionService, 'signout' );
+					spyOn( fbController, 'signout' );
+					User.set( { id : 9, fb_user_id : 'lkp' } );
+					userController.initiateSignout();
+					
+					expect( sessionService.signout ).toHaveBeenCalled();
+					expect( fbController.signout ).toHaveBeenCalled();
+				});
+				
+				it('after session service does its work, it dispatches appUserSignoutComplete, which causes User update, db sync, and reconciled event to be fired', function() {
+					
+					var userObj = {};
+					
+					eventBus.dispatch( eventBus.e.appUserSignoutComplete, userObj );
+					//user set is called in handler
+					expect( User.set ).toHaveBeenCalled();
+					//bb sync is called
+					expect( Backbone.sync ).toHaveBeenCalled();
+					//reconcile is called
+					expect( eventBus.dispatch).toHaveBeenCalledWith( eventBus.e.userReconciled );
+				});
+				
+				it('after fb controller does its logout work, it dispatche fbSignoutComplete, which causes User update, db sync, and reconciled event to be fired', function() {
+					var userObj = {};
+					eventBus.dispatch( eventBus.e.fbSignoutComplete, userObj );
+					
+					//user set is called in handler
+					expect( User.set ).toHaveBeenCalled();
+					//bb sync is called
+					expect( Backbone.sync ).toHaveBeenCalled();
+					//reconcile is called
+					expect( eventBus.dispatch).toHaveBeenCalledWith( eventBus.e.userReconciled );
+					
+				});
+				
+				
+
+			});
+		
 		});
 		
-		describe('the user signs out,', function() {
-			
-			it('the signout is called when the initiateSignout event is dispatched', function() {
-				//spyOn( userController, 'initiateSignout' );
-				//eventBus.dispatch( eventBus.e.initiateSignout );
-				//expect( userController.initiateSignout ).toHaveBeenCalled();
-			});
-			
-		});
 		
 	});
 	

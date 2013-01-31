@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 			// fire up user controller
 			// get user from: 
 			//			local file storage (native app)
-			//			cookie (web app)
+			//			session (web app)
 			
 			
 			// then either present login / register

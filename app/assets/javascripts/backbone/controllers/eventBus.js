@@ -14,14 +14,18 @@ define(function(require, exports, module ){
 		fbOnLoginStatus : 'fbOnLoginStatus',
 		fbOnLogin : 'fbOnLogin',
 		fbOnMeApi : 'fbOnMeApi',
+		fbOnLogout : 'fbOnLogout',
 		
 		// after we complete all our calls
 		fbStatusRetrievalComplete : 'fbStatusRetrievalComplete',
 		
-		// called after we've gotten all info we can about user
-		userReconciled : 'userReconciled',
 		
-		initiateSignout : 'initiateSignout'
+		initiateSignout : 'initiateSignout',	// intitial trigger top start the process
+		appUserSignoutComplete : 'appUserSignoutComplete',		// when user finishes signing out of app
+		fbSignoutComplete : 'fbSignoutComplete',// when all signut stages are complete
+		
+		userReconciled : 'userReconciled'	// all user processing is done, tell the rest of the app
+		
 
 	};
 	

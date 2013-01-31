@@ -5,9 +5,9 @@ define(function(require, exports, module) {
 		eventBus = require('controllers/eventBus');
 
 	
-	describe('View controller', function() {
+	describe('The view controller', function() {
 	
-		describe('init', function() {
+		describe('initializes,', function() {
 	
 			beforeEach( function() {
 				
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 			
 		});
 		
-		describe('after initialization', function() {
+		describe('after initialization,', function() {
 			
 			beforeEach( function() {
 				viewController.init();
@@ -61,8 +61,11 @@ define(function(require, exports, module) {
 				});
 				
 			});
+			
 		
 		});
+		
+		dwescri
 		
 	});
 

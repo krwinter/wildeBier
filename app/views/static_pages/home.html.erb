@@ -1,27 +1,3 @@
-<!--<%= javascript_include_tag "application" %>-->
-
-<!--
-<div id="main-list" >
-    <div class="row-fluid" id="title-bar">
-        <div class="title span10">
-            <h1>WildeBier!</h1>
-        </div>
-        <div class="user-info span2">
-                <% if signed_in? %>
-                  <%= link_to current_user.first_name + " " + current_user.last_name, user_path(current_user) %>
-                  <br />
-                  <%= link_to "Sign out", signout_path, method: :delete %>
-                <% else %>
-                  - Not signed in -<%= link_to "Sign in", signin_path %>
-                <% end %>
-                <% if current_user.admin? %>
-                    <br />
-                    <%= link_to "ADMIN", admin_path %>
-                <% end %>
-                <div class="fb-login">FB INFO</div>
-        </div>
-    </div>
--->
 
     <!-- pass rails user data into javascript -->
     <script id="rails_user_data" type="text/json" >

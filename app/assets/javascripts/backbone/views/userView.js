@@ -2,7 +2,8 @@ define(function(require, exports, module) {
 
 	var template = require('text!templates/user.html'),
 		Backbone = require('backbone'),
-		User = require('models/user');
+		User = require('models/user'),
+		eventBus = require('controllers/eventBus');
 	
 	var userView = Backbone.View.extend({
 		
