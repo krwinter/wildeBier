@@ -35,10 +35,10 @@ require.config({
 });
 
 var specs = [];
-//specs.push( 'test/spec/appSpec' )
+specs.push( 'test/spec/appSpec' )
 specs.push( 'test/spec/controllers/userControllerSpec' )
 //specs.push( 'test/spec/controllers/viewControllerSpec' );
-//specs.push( 'test/spec/controllers/fbControllerSpec' );
+specs.push( 'test/spec/controllers/fbControllerSpec' );
 
 
 require( specs , 

@@ -110,6 +110,15 @@ define(function(require, exports, module ){
 			});
 		
 		});
+		
+		describe('Logging in with Facebook', function() {
+		
+			it('in response to clicking "login w/Facebook" button', function() {
+				
+				spyOn( fbController, 'initiateLogin' );
+				eventBus.dispatch( eventBus.e.fbInitiateLogin );
+				expect( fbController.initateLogin ).toHaveBeenCalled();
+			});
 
 		
 		

@@ -55,6 +55,12 @@ define(function(require, exports, module) {
 	    known : function() {
 	    	
 	    	return ( this.get('id') );
+	    },
+	    
+	    loggedIn : function() {
+	    	
+	    	return ( this.get('remember_token') );
+	    	
 	    }
 		
 	

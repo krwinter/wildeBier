@@ -19,6 +19,7 @@ define(function(require, exports, module) {
 		eventBus.listen( eventBus.e.fbStatusRetrievalComplete, onFbStatusRetrievalComplete, controller );	
 		
 		eventBus.listen( eventBus.e.initiateLogin, onInitiateLogin, controller );	
+		eventBus.listen( eventBus.e.loginSuccess, onLoginSuccess, controller );	
 
 		eventBus.listen( eventBus.e.initiateSignout, onInitiateSignout, controller );	
 		eventBus.listen( eventBus.e.appUserSignoutComplete, onAppUserSignout, controller );	
@@ -35,7 +36,18 @@ define(function(require, exports, module) {
 		
 		User.set( userObj );
 		
-		synchronizeDatabase();
+		if ( !User.loggedIn() ){
+			
+			//fetch user by fbid
+			
+			//then use session service to log them in
+			
+		} else {
+		
+			synchronizeDatabase();
+			reconcileUser();
+			
+		}
 		
 	}
 	
@@ -103,7 +115,7 @@ define(function(require, exports, module) {
 	 * 2. call userReconciled
 	 */
 	var reconcileUser = function() {
-		
+		console.log('==Reconcile User')
 		eventBus.dispatch( eventBus.e.userReconciled );
 	};
 	
@@ -117,6 +129,14 @@ define(function(require, exports, module) {
 		
 	};
 	
+	var onLoginSuccess = function( userObj ){
+		
+		User.set( userObj );
+		
+		fbController.getLoginStatus();
+		
+	}
+	
 
 	var controller = {
 		
@@ -125,6 +145,8 @@ define(function(require, exports, module) {
 			console.log('user controller INIT');
 			
 			setupListeners();
+			
+			fbController.init();
 			
 			this.getSavedUser();
 			
@@ -139,39 +161,47 @@ define(function(require, exports, module) {
 			var userObj = sessionService.get();
 			
 			var user = User.set( userObj );
-			
-			//we have our user - check with other services
-			if ( User.known() ) {
-				
-				this.getExternalUserStatus();
-			
-			// we're all done
-			} else {
-				
-				eventBus.dispatch( eventBus.e.userReconciled );
 
-			}
+			//TODO - we check for external fb automatically nowe
+			eventBus.dispatch( eventBus.e.userReconciled );
 			
-		
+			
+			//TODO - for now we always check fb externally
+			//we have our user - check with other services
+			// if ( User.loggedIn() ) {
+// 				
+				// this.getExternalUserStatus();
+// 			
+			// // we're all done
+			// } else {
+// 				
+				// eventBus.dispatch( eventBus.e.userReconciled );
+// 
+			// }
+// 			
 		},
 		
 		/**
 		 * Make calls to external services to get external info about user
 		 * 
 		 */
+		// TODO - this is 
 		getExternalUserStatus : function() {
 			
+			// for now always init fb sdk
+			// otherwise it's tricky to respond to 'login w/fb button'
+			
 			//Facebook
-			if ( config.useFacebook && User.get('fb_user_id') ) {
+			//if ( config.useFacebook && User.get('fb_user_id') ) {
 				
 				//we're using Facebook, so initialize it
-				fbController.init();
+				//fbController.init();
 				
-			} else {
+			//} else {
 				
-				eventBus.dispatch( eventBus.e.userReconciled );
+			//	eventBus.dispatch( eventBus.e.userReconciled );
 			
-			}
+			//}
 			
 		},
 		

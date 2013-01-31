@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 	
 	var onUserReconciled = function(){
 		
-		if ( User.get('id') ) {
+		if ( User.loggedIn()) {
 			viewController.showUserView();
 		} else {
 			viewController.showLoginView();
@@ -40,31 +40,41 @@ define(function(require, exports, module) {
 				this.rootElement = config.rootElement;
 			}
 			
-			this.showDefaultView();
+			//this.showDefaultView();
+			this.showNewView( DefaultView );
 			
 		},
 		
-		showDefaultView : function() {
+		showNewView : function( viewName) {
 			
-			var view = new DefaultView(); 
-			$( this.rootElement ).append( view.el );
-			this.currentView = view;
+			if ( this.currentView ) {
+				$( this.rootElement ).empty();
+				
+			}
 			
-		 },
+			this.currentView = new viewName();
+			$( this.rootElement ).append( this.currentView.el );
+			
+		},
+		
+		// showDefaultView : function() {
+// 			
+			// var view = new DefaultView(); 
+			// $( this.rootElement ).append( view.el );
+			// this.currentView = view;
+// 			
+		 // },
 		
 		showUserView : function() {
 			
-			var view = new UserView();
-			$( this.rootElement ).append( view.el );
-			this.currentView = view;
+			this.showNewView( UserView );
 			
 		},
 		
 		showLoginView : function() {
 			
-			var view = new LoginView();
-			$( this.rootElement ).append( view.el );
-			this.currentView = view;
+
+			this.showNewView( LoginView );
 			
 			
 		}

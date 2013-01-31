@@ -20,6 +20,7 @@ define(function(require, exports, module) {
 	
 		initiateFbLogin = function() {
 			
+			eventBus.dispatch( eventBus.e.fbInitiateLogin );
 			
 		}
 	

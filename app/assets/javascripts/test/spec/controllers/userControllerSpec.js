@@ -45,31 +45,35 @@ define(function(require, exports, module) {
 				expect( User.set ).toHaveBeenCalled();
 			});
 			
-			it('the user is known,', function() {
-				expect( userController.getExternalUserStatus ).toHaveBeenCalled();
-			});
 			
-			describe('the saved user has used FB in the past (has a fbID)', function() {
-				
-				it('will initialize the Facebook controller and load the sdk', function() {
-					
-					var user = User.set( { id : 3, fb_user_id : 4} );
-					userController.getExternalUserStatus();
-					expect( fbController.init ).toHaveBeenCalled();
-				});
-				
-			});
+			// --- NOT VALID anymore - we always load fb sdk + get fb status---
 			
-			describe('the saved user has NOT used FB in the past (has NO fbID),', function() {
-				
-				it('will dispatch userReconciled event', function() {
-					var user = User.set( { id : 1, fb_user_id : null } );
-					userController.getExternalUserStatus();
-					expect( eventBus.dispatch).toHaveBeenCalledWith( eventBus.e.userReconciled );
-				});
-				
-			});
+			// it('the user is known,', function() {
+				// expect( userController.getExternalUserStatus ).toHaveBeenCalled();
+			// });
 			
+			
+			// describe('the saved user has used FB in the past (has a fbID)', function() {
+// 				
+				// it('will initialize the Facebook controller and load the sdk', function() {
+// 					
+					// var user = User.set( { id : 3, fb_user_id : 4} );
+					// userController.getExternalUserStatus();
+					// expect( fbController.init ).toHaveBeenCalled();
+				// });
+// 				
+			// });
+			
+			// describe('the saved user has NOT used FB in the past (has NO fbID),', function() {
+// 				
+				// it('will dispatch userReconciled event', function() {
+					// var user = User.set( { id : 1, fb_user_id : null } );
+					// userController.getExternalUserStatus();
+					// expect( eventBus.dispatch).toHaveBeenCalledWith( eventBus.e.userReconciled );
+				// });
+// 				
+			// });
+// 			
 		
 		});
 		
@@ -92,11 +96,11 @@ define(function(require, exports, module) {
 				//this.server.restore();
 			});
 			
-			it('the database will be updated,', function() {
-				eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
-				expect( Backbone.sync ).toHaveBeenCalled();
-			});
-			
+			// it('the database will be updated,', function() {
+				// eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );
+				// expect( Backbone.sync ).toHaveBeenCalled();
+			// });
+// 			
 			//TODO - figure out correct response to trigger success
 			it('the reconciled event will be fired,', function() {
 				eventBus.dispatch( eventBus.e.fbStatusRetrievalComplete );

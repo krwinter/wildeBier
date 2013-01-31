@@ -12,6 +12,7 @@ define(function(require, exports, module) {
 		eventBus = require('controllers/eventBus'),
 		statusService = require('controllers/services/fbStatusService'),
 		apiService = require('controllers/services/fbApiService'),
+		loginService = require('controllers/services/fbLoginService'),
 		logoutService = require('controllers/services/fbLogoutService'),
 		User = require('models/user');
 	
@@ -22,12 +23,45 @@ define(function(require, exports, module) {
 	var setupListeners = function() {
 	
 		eventBus.listen( eventBus.e.fbSdkLoaded, onSdkLoaded, controller );
+
+		eventBus.listen( eventBus.e.fbInitiateLogin, onInitiateLogin, controller );
+		eventBus.listen( eventBus.e.fbOnLoginResponse, onLoginResponse, controller );
 		
 		eventBus.listen( eventBus.e.fbOnLoginStatus, onLoginStatus, controller );
 		eventBus.listen( eventBus.e.fbOnMeApi, onMeApi, controller );
 		eventBus.listen( eventBus.e.fbOnLogout, onFbLogout, controller );	
 
 	
+		
+	};
+	
+	/**
+	 * Called when someone clicks 'login w/fb button', for example
+	 */
+	var onInitiateLogin = function() {
+		
+		controller.initiateLogin();
+	};
+	
+	/**
+	 * Handle response from login call
+	 */
+	var onLoginResponse = function( response ){
+		
+		if ( response.status === 'connected' ) {
+			
+			controller.getAuthenticatedUserData();
+			
+			//log us in if we're not'
+			if ( !User.loggedIn() ){
+
+				//login user				
+				
+			}
+			
+			// call get external status 
+			
+		}
 		
 	};
 	
@@ -147,6 +181,8 @@ define(function(require, exports, module) {
 	 */
 	var onSdkLoaded = function() {
 
+		controller.sdkLoaded = true;
+		
 		controller.getLoginStatus();
 	}
 	
@@ -174,6 +210,26 @@ define(function(require, exports, module) {
 		loadSdk : function() {
 			
 			initFbSdk();
+		},
+		
+		sdkLoaded : undefined,
+		
+		/**
+		 * Calls fbLoginService
+		 */
+		initiateLogin : function() {
+			
+			//if ( User.get('fb_status') !== 'connected' ) {
+				
+				loginService.login();
+
+			//} else {
+				
+				//we are already connected, call session service
+				
+			//}
+			//
+			
 		},
 		
 		
