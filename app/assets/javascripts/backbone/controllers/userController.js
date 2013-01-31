@@ -18,6 +18,8 @@ define(function(require, exports, module) {
 		
 		eventBus.listen( eventBus.e.fbStatusRetrievalComplete, onFbStatusRetrievalComplete, controller );	
 		
+		eventBus.listen( eventBus.e.initiateLogin, onInitiateLogin, controller );	
+
 		eventBus.listen( eventBus.e.initiateSignout, onInitiateSignout, controller );	
 		eventBus.listen( eventBus.e.appUserSignoutComplete, onAppUserSignout, controller );	
 		eventBus.listen( eventBus.e.fbSignoutComplete, onFbSignout, controller );	//from fb controller
@@ -75,7 +77,8 @@ define(function(require, exports, module) {
 		//see if all steps completed
 		User.set( userObj );
 		
-		synchronizeDatabase(); // but we automatically signal that userReconciled - need to update db, then send reconciled
+		// don't need to sync db - done for us by session handler
+		//synchronizeDatabase(); // but we automatically signal that userReconciled - need to update db, then send reconciled
 		
 		User.clear(); //race condition waiting to happen!  other user services are waiting to return - fine for the time being
 		
@@ -102,6 +105,16 @@ define(function(require, exports, module) {
 	var reconcileUser = function() {
 		
 		eventBus.dispatch( eventBus.e.userReconciled );
+	};
+	
+	/**
+	 * Handles initiateLogin event - passes loginObj to controller public function
+	 */
+	 // TODO - do we need this extra step, or can we just handle in public function?
+	var onInitiateLogin = function( loginObj ) {
+		
+		controller.initiateLogin( loginObj );
+		
 	};
 	
 
@@ -139,8 +152,6 @@ define(function(require, exports, module) {
 
 			}
 			
-			// we dispatch this whether user or not
-			//eventBus.dispatch( eventBus.e.savedUserRetrieved, User );
 		
 		},
 		
@@ -177,6 +188,12 @@ define(function(require, exports, module) {
 				fbController.signout();
 				
 			}
+			
+		},
+		
+		initiateLogin : function( loginObj ){
+			
+			sessionService.login( loginObj );
 			
 		}	
 		

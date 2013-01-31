@@ -24,6 +24,10 @@ define(function(require, exports, module ){
 		appUserSignoutComplete : 'appUserSignoutComplete',		// when user finishes signing out of app
 		fbSignoutComplete : 'fbSignoutComplete',// when all signut stages are complete
 		
+		initiateLogin : 'initiateLogin',
+		loginSuccess : 'loginSuccess',
+		loginError : 'loginError',
+		
 		userReconciled : 'userReconciled'	// all user processing is done, tell the rest of the app
 		
 

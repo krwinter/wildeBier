@@ -1,7 +1,28 @@
 define(function(require, exports, module) {
 
-	var template = require('text!templates/user.html'),
-		Backbone = require('backbone');
+	var template = require('text!templates/login.html'),
+		Backbone = require('backbone'),
+		eventBus = require('controllers/eventBus');
+	
+	
+	
+	var initiateLogin = function() {
+		
+			var loginObj = {
+				
+				un : $('.js-login-username').val(),
+				pw : $('.js-login-password').val(),
+			};
+			
+			eventBus.dispatch( eventBus.e.initiateLogin, loginObj );
+		
+		},
+	
+		initiateFbLogin = function() {
+			
+			
+		}
+	
 	
 	var loginView = Backbone.View.extend({
 		
@@ -14,6 +35,15 @@ define(function(require, exports, module) {
 		render : function() {
 			
 			$(this.el).append( template );
+			
+		},
+		
+		events : {
+			
+			'click .js-login-button' : initiateLogin,
+			
+			'click .js-facebook-login-button' : initiateFbLogin
+			
 			
 		}
 		

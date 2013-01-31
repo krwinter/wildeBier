@@ -7,7 +7,22 @@
 
 define(function(require, exports, module) {
 
-	var eventBus = require('controllers/eventBus');
+	var eventBus = require('controllers/eventBus'),
+		$ = require('jquery');
+	
+	var onLoginSuccess = function( userObj) {
+		
+		eventBus.dispatch( eventBus.e.loginSuccess, userObj );
+	
+	};
+	
+	var onLoginError = function( response ) {
+		
+		var errorObj = $.parseJSON( response.responseText );
+		
+		eventBus.dispatch( eventBus.e.loginError, errorObj );
+	
+	};
 	
 	var service = {
 		
@@ -49,6 +64,28 @@ define(function(require, exports, module) {
 			
 			// when done dispatch onUserSignout
 			eventBus.dispatch( eventBus.e.appUserSignoutComplete, userObj );
+			
+		},
+		
+		login : function( loginObj ) {
+			
+			var userData = {
+				
+				'session[email]' : loginObj.un,
+				'session[password]' : loginObj.pw
+			};
+			
+			$.ajax({
+				
+				url : '/sessions',
+				type : 'POST',
+				data : userData,
+				dataType : 'json',
+				success : onLoginSuccess,
+				error : onLoginError
+				
+				
+			});
 			
 		}	
 		
