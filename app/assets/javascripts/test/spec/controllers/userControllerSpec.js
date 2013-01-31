@@ -158,11 +158,41 @@ define(function(require, exports, module) {
 		
 		describe('the user signs in,', function() {
 			
+			var server;
+			beforeEach( function() {
+				server = sinon.fakeServer.create();
+			})
+			
+			afterEach( function() {
+				server.restore();
+			})
+			
 			it('clicking the login button dispatches the initiate login event which invokes initiateLogin', function(){
 				spyOn( userController, 'initiateLogin' );
 				var loginObj = { un : 'user_email', pw : 'user_pw' }
 				eventBus.dispatch( eventBus.e.initiateLogin, loginObj );
 				expect( userController.initiateLogin ).toHaveBeenCalledWith( loginObj );
+				
+			});
+			
+			it('- GOOD credentials gets a success response from the server with the user object', function() {
+				
+				userController.initiateLogin( { 'session[email]':'a@b.c', 'session[password]' : '12345' } );
+				server.respondWith( [200, { "Content-Type": "application/json" },
+                                		 '{ "id": 12, "first_name": "Testguy" }']);
+                server.respond();
+                
+                expect( eventBus.dispatch ).toHaveBeenCalledWith( eventBus.e.loginSuccess, { "id": 12, "first_name": "Testguy" } );
+				
+			});
+
+			it('- BAD credentials gets an error response from the server with the error object', function() {
+				
+				userController.initiateLogin( { 'session[email]':'a@b.c', 'session[password]' : '12345' } );
+				server.respondWith( [422,  { "Content-Type": "application/json" }, '{ "error": "bad un/pw" }']);
+                server.respond();
+                
+                expect( eventBus.dispatch ).toHaveBeenCalledWith( eventBus.e.loginError, { "error": "bad un/pw" } );
 				
 			});
 			
